@@ -10,6 +10,7 @@
 #include <SDL.h>
 #include <vector>
 #include "Math.h"
+#include "Actors/Ball.h"
 #include <string>
 
 class Game
@@ -85,4 +86,5 @@ private:
     Vector2 mCameraPos;
 
     // Game-specific
+    Ball* mBall;
 };

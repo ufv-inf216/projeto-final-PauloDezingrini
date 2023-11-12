@@ -17,10 +17,9 @@ DrawSpriteComponent::DrawSpriteComponent(class Actor* owner, const std::string &
 void DrawSpriteComponent::Draw(SDL_Renderer *renderer)
 {
 
-    Vector2 camPos = mOwner->GetGame()->GetCameraPos();
     auto dstrect = new SDL_Rect();
-    dstrect->x = mOwner->GetPosition().x - camPos.x;
-    dstrect->y = mOwner->GetPosition().y - camPos.y;
+    dstrect->x = mOwner->GetPosition().x;
+    dstrect->y = mOwner->GetPosition().y;
     dstrect->w = mWidth;
     dstrect->h = mHeight;
     float rotation = mOwner->GetRotation();

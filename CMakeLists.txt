@@ -35,10 +35,15 @@ add_executable(${PROJECT_NAME}
         Source/Components/ColliderComponents/AABBColliderComponent.h
         Source/Components/DrawComponents/DrawAnimatedComponent.cpp
         Source/Components/DrawComponents/DrawAnimatedComponent.h
-        Source/Actors/Block.cpp
-        Source/Actors/Block.h
         Source/Actors/Spawner.cpp
         Source/Actors/Spawner.h
+        Source/Actors/Field.cpp
+        Source/Actors/Field.h
+        Source/Actors/Ball.cpp
+        Source/Actors/Ball.h
+        Source/Actors/Ball.h
+        Source/Actors/Ball.h
+        Source/Actors/Ball.h
 )
 
 ####### DO NOT EDIT BELLOW

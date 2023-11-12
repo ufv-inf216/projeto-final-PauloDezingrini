@@ -16,7 +16,7 @@ DrawPolygonComponent::DrawPolygonComponent(class Actor* owner, std::vector<Vecto
 void DrawPolygonComponent::Draw(SDL_Renderer *renderer)
 {
     // Set draw color to green
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 
     Vector2 pos = mOwner->GetPosition();
     Vector2 cameraPos = mOwner->GetGame()->GetCameraPos();

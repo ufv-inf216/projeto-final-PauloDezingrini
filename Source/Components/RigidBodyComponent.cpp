@@ -29,7 +29,7 @@ void RigidBodyComponent::ApplyForce(const Vector2 &force) {
 void RigidBodyComponent::Update(float deltaTime)
 {
     // Apply gravity acceleration
-    ApplyForce(Vector2::UnitY * GRAVITY);
+//    ApplyForce(Vector2::UnitY * GRAVITY);
 
     // Apply friction
     if(mVelocity.x != 0.0f) {
@@ -46,8 +46,9 @@ void RigidBodyComponent::Update(float deltaTime)
         mVelocity.x = 0.f;
     }
 
-    Vector2 position = mOwner->GetPosition();
-    mOwner->SetPosition(position + mVelocity * deltaTime);
+    Vector2 position = mOwner->GetPosition() + mVelocity * deltaTime;
+    mOwner->SetPosition(position);
+
 
     auto collider = mOwner->GetComponent<AABBColliderComponent>();
     if (collider) {

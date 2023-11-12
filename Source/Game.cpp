@@ -14,10 +14,10 @@
 #include "Random.h"
 #include "Game.h"
 #include "Actors/Actor.h"
-#include "Actors/Block.h"
 #include "Actors/Spawner.h"
 #include "Components/DrawComponents/DrawComponent.h"
 #include "Components/ColliderComponents/AABBColliderComponent.h"
+#include "Actors/Field.h"
 
 const int LEVEL_WIDTH = 213;
 const int LEVEL_HEIGHT = 14;
@@ -44,7 +44,7 @@ bool Game::Initialize()
         return false;
     }
 
-    mWindow = SDL_CreateWindow("P4: Super Mario Bros", 0, 0, mWindowWidth, mWindowHeight, 0);
+    mWindow = SDL_CreateWindow("P4: Super Mario Bros", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, mWindowWidth, mWindowHeight, 0);
     if (!mWindow)
     {
         SDL_Log("Failed to create window: %s", SDL_GetError());
@@ -70,6 +70,8 @@ bool Game::Initialize()
 
 void Game::InitializeActors()
 {
+    auto field = new Field(this, 1280, 860);
+    mBall = new Ball(this, 32, 32);
 }
 
 void Game::LoadLevel(const std::string& levelPath, const int width, const int height)
@@ -240,7 +242,18 @@ void Game::GenerateOutput()
 }
 
 SDL_Texture* Game::LoadTexture(const std::string& texturePath) {
+    SDL_Surface* image = IMG_Load(texturePath.c_str());
+    if (!image) {
+        SDL_Log("Erro ao carregar imagem");
+        return nullptr;
+    }
 
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(mRenderer, image);
+    SDL_FreeSurface(image);
+    if (!texture) {
+        return nullptr;
+    }
+    return texture;
 }
 
 void Game::Shutdown()
