@@ -112,7 +112,7 @@ void Field::CreateColliders() {
         new DrawPolygonComponent(this, vertices);
     }
 
-    x = 300.0f;
+    x = 290.0f;
     y = 795.0f;
     offset = 400.0f;
     new AABBColliderComponent(this, windowWidth - x, windowHeight - y, length, offset, ColliderLayer::Goal);
@@ -127,7 +127,7 @@ void Field::CreateColliders() {
         new DrawPolygonComponent(this, vertices);
     }
 
-    x = 1320;
+    x = 1330;
     offset = 400;
     new AABBColliderComponent(this, windowWidth - x, windowHeight - y, length, offset, ColliderLayer::Goal);
 

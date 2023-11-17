@@ -18,6 +18,7 @@
 #include "Components/DrawComponents/DrawComponent.h"
 #include "Components/ColliderComponents/AABBColliderComponent.h"
 #include "Actors/Field.h"
+#include "Actors/Characters/Character.h"
 
 const int LEVEL_WIDTH = 213;
 const int LEVEL_HEIGHT = 14;
@@ -72,7 +73,9 @@ void Game::InitializeActors()
 {
     auto field = new Field(this, 1280, 860);
     mBall = new Ball(this, 32, 32);
-
+    
+    auto player = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", true);
+    player->SetPosition(Vector2(mWindowWidth/2 - 64, mWindowHeight/2 - 64));
 }
 
 void Game::LoadLevel(const std::string& levelPath, const int width, const int height)
