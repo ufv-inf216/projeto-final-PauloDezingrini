@@ -72,6 +72,7 @@ void Game::InitializeActors()
 {
     auto field = new Field(this, 1280, 860);
     mBall = new Ball(this, 32, 32);
+
 }
 
 void Game::LoadLevel(const std::string& levelPath, const int width, const int height)
@@ -89,8 +90,37 @@ void Game::RunLoop()
     }
 }
 
+SDL_GameController *Game::findController() {
+    for (int i = 0; i < SDL_NumJoysticks(); i++) {
+        if (SDL_IsGameController(i)) {
+            return SDL_GameControllerOpen(i);
+        }
+    }
+
+    return nullptr;
+}
+
+std::vector<SDL_GameController*> Game::findControllers() {
+    std::vector<SDL_GameController*> controllers;
+
+    for (int i = 0; i < SDL_NumJoysticks(); i++) {
+        if (SDL_IsGameController(i)) {
+            controllers.push_back(SDL_GameControllerOpen(i));
+        }
+    }
+
+    return controllers;
+}
+
+SDL_JoystickID Game::getControllerInstanceID(SDL_GameController *controller) {
+    return SDL_JoystickInstanceID(
+            SDL_GameControllerGetJoystick(controller));
+}
+
 void Game::ProcessInput()
 {
+    std::vector<SDL_GameController*> controllers = findControllers();
+
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {

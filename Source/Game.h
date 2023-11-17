@@ -50,6 +50,10 @@ public:
     // Game-specific
 
 private:
+
+    SDL_JoystickID getControllerInstanceID(SDL_GameController *controller);
+    std::vector<SDL_GameController *> findControllers();
+    SDL_GameController *findController();
     void ProcessInput();
     void UpdateGame();
     void UpdateCamera();
@@ -87,4 +91,5 @@ private:
 
     // Game-specific
     Ball* mBall;
+
 };
