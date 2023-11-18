@@ -20,4 +20,6 @@ private:
     DrawSpriteComponent* mDrawComponent;
 
     void CreateColliders();
+    void OnUpdate(float deltaTime) override;
+    void HandleGoal(bool team);
 };

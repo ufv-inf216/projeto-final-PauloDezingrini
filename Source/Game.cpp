@@ -74,8 +74,11 @@ void Game::InitializeActors()
     auto field = new Field(this, 1280, 860);
     mBall = new Ball(this, 32, 32);
 
+    //Create an array of players
     auto player = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", true);
-    player->SetPosition(Vector2(mWindowWidth/2 - 64, mWindowHeight/2 - 64));
+
+    player->SetDefaultPosition(Vector2(mWindowWidth/2 - 64, mWindowHeight/2 - 64));
+    player->SetPosition(player->GetDefaultPosition());
 }
 
 void Game::LoadLevel(const std::string& levelPath, const int width, const int height)
@@ -270,4 +273,15 @@ void Game::Shutdown()
     SDL_DestroyRenderer(mRenderer);
     SDL_DestroyWindow(mWindow);
     SDL_Quit();
+}
+
+void Game::ResetMatchState()
+{
+    //Disable movement for every actor
+
+
+    //Reset position for every actor
+    for (Actor * character: mActors) {
+        character->ResetDefaultPosition();
+    }
 }

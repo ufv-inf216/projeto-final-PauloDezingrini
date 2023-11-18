@@ -72,6 +72,7 @@ public:
     void SetOnGround() { mIsOnGround = true; };
     void SetOffGround() { mIsOnGround = false; };
     bool IsOnGround() const { return mIsOnGround; };
+    virtual void ResetDefaultPosition ();
 
     // Any actor-specific collision code (overridable)
     virtual void OnCollision(std::unordered_map<CollisionSide, AABBColliderComponent::Overlap>& responses);

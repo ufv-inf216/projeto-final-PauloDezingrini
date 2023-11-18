@@ -48,6 +48,7 @@ public:
     SDL_Texture* LoadTexture(const std::string& texturePath);
 
     // Game-specific
+    void ResetMatchState();
 
 private:
     void ProcessInput();

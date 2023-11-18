@@ -18,6 +18,10 @@ public:
 
     void OnProcessInput(const Uint8* keyState) override;
     void OnUpdate(float deltaTime) override;
+
+    void ResetDefaultPosition() override;
+    void SetDefaultPosition(Vector2 position) {defaultPos = position; }
+    Vector2 GetDefaultPosition() { return defaultPos; };
 private:
 
     bool mTeam;
@@ -25,6 +29,7 @@ private:
     float mForwardSpeed;
     float mSize;
     std::string mName;
+    Vector2 defaultPos;
 
 
     RigidBodyComponent* mRigidBodyComponent;

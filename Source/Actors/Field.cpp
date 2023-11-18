@@ -143,3 +143,13 @@ void Field::CreateColliders() {
 
 }
 
+void Field::OnUpdate(float deltaTime)
+{
+    //check colision of a ball with one of both sides. If hits is a goal
+    //handleGoal()
+}
+
+void Field::HandleGoal(bool team) {
+    //decide who scored the goal, update the scores
+    mGame->ResetMatchState();
+}
