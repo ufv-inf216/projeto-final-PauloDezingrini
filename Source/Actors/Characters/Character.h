@@ -29,10 +29,10 @@ private:
 
     RigidBodyComponent* mRigidBodyComponent;
     DrawSpriteComponent* mDrawSpriteComponent;
-    AABBColliderComponent* mPlayerColliderComponent;
-    AABBColliderComponent* mRadiusColliderComponent;
-//    CircleColliderComponent* mPlayerColliderComponent;
-//    CircleColliderComponent* mRadiusColliderComponent;
+//    AABBColliderComponent* mPlayerColliderComponent;
+//    AABBColliderComponent* mRadiusColliderComponent;
+    CircleColliderComponent* mPlayerColliderComponent;
+    CircleColliderComponent* mRadiusColliderComponent;
 };
 
 #endif //BRAZILSTRIKERS_CHARACTER_H

@@ -46,6 +46,8 @@ add_executable(${PROJECT_NAME}
         Source/Actors/Ball.h
         Source/Actors/Characters/Character.cpp
         Source/Actors/Characters/Character.h
+        Source/Collision.cpp
+        Source/Collision.h
 )
 
 ####### DO NOT EDIT BELLOW

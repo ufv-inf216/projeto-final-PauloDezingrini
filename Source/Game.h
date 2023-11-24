@@ -38,6 +38,10 @@ public:
     void RemoveCollider(class AABBColliderComponent* collider);
     std::vector<class AABBColliderComponent*>& GetColliders() { return mColliders; }
 
+    void AddCollider(class CircleColliderComponent* collider);
+    void RemoveCollider(class CircleColliderComponent* collider);
+    std::vector<class CircleColliderComponent*>& GetCircleColliders() { return mCircleColliders; }
+
     Vector2& GetCameraPos() { return mCameraPos; };
     void SetCameraPos(const Vector2& position) { mCameraPos = position; };
 
@@ -67,6 +71,7 @@ private:
 
     // All the collision components
     std::vector<class AABBColliderComponent*> mColliders;
+    std::vector<class CircleColliderComponent*> mCircleColliders;
 
     // SDL stuff
     SDL_Window* mWindow;

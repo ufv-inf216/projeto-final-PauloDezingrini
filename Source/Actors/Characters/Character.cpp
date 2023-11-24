@@ -14,7 +14,8 @@ Character::Character(Game* game, const std::string &name, const std::string &tex
 {
     mRigidBodyComponent = new RigidBodyComponent(this, mass);
     mDrawSpriteComponent = new DrawSpriteComponent(this, texturePath, mSize, mSize);
-    mPlayerColliderComponent = new AABBColliderComponent(this, 0, 0, 64, 64, ColliderLayer::Player);
+//    mPlayerColliderComponent = new AABBColliderComponent(this, 0, 0, 64, 64, ColliderLayer::Player);
+    mPlayerColliderComponent = new CircleColliderComponent(this, 64);
 }
 
 void Character::OnProcessInput(const uint8_t* state)

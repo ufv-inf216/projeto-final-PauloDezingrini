@@ -225,6 +225,15 @@ void Game::RemoveCollider(AABBColliderComponent* collider)
     mColliders.erase(iter);
 }
 
+void Game::AddCollider(class CircleColliderComponent *collider) {
+    mCircleColliders.emplace_back(collider);
+}
+
+void Game::RemoveCollider(class CircleColliderComponent *collider) {
+    auto iter = std::find(mCircleColliders.begin(), mCircleColliders.end(), collider);
+    mCircleColliders.erase(iter);
+}
+
 void Game::GenerateOutput()
 {
     // Set draw color to black

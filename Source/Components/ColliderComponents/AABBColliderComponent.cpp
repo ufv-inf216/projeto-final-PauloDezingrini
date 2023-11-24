@@ -132,3 +132,17 @@ void AABBColliderComponent::DetectCollision(RigidBodyComponent *rigidBody)
     // Callback only for closest (first) collision
     mOwner->OnCollision(responses);
 }
+
+float AABBColliderComponent::MinDistSq(const Vector2 &point) const {
+
+    Vector2 min = GetMin();
+    Vector2 max = GetMax();
+
+    // Compute differences for each axis
+    float dx = Math::Max(min.x - point.x, 0.0f);
+    dx = Math::Max(dx, point.x - max.x);
+    float dy = Math::Max(min.y - point.y, 0.0f);
+    dy = Math::Max(dy, point.y - max.y);
+    // Distance squared formula
+    return dx * dx + dy * dy;
+}

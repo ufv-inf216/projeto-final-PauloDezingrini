@@ -20,8 +20,8 @@ private:
     float mSize;
     float mForwardSpeed = 3000.0f;
 
-//    CircleColliderComponent* mColliderComponent;
-    AABBColliderComponent* mColliderComponent;
+    CircleColliderComponent* mColliderComponent;
+//    AABBColliderComponent* mColliderComponent;
     RigidBodyComponent* mRigidBodyComponent;
     DrawSpriteComponent* mDrawComponent;
 };

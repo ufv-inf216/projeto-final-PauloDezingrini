@@ -41,6 +41,7 @@ public:
 
     bool Intersect(const AABBColliderComponent& b) const;
     void DetectCollision(RigidBodyComponent *rigidBody);
+    float MinDistSq(const Vector2& point) const;
 
     Vector2 GetMin() const;
     Vector2 GetMax() const;
@@ -50,6 +51,7 @@ public:
 private:
     Overlap GetMinOverlap(AABBColliderComponent* b) const;
     void ResolveCollisions(RigidBodyComponent *rigidBody, const Overlap& minOverlap);
+
 
     Vector2 mOffset;
     int mWidth;
