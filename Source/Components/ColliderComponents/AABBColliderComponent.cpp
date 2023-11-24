@@ -82,17 +82,17 @@ void AABBColliderComponent::ResolveCollisions(RigidBodyComponent *rigidBody, con
 {
 
     SDL_Log("Resolvendo colisão");
-    rigidBody->GetOwner()->SetPosition(Vector2(0,0));
+    auto owner = rigidBody->GetOwner();
 
-//    if (minOverlap.side == CollisionSide::Top || minOverlap.side == CollisionSide::Down){
-//        mOwner->SetPosition(mOwner->GetPosition() + Vector2(0, minOverlap.amount));
-//        rigidBody->SetVelocity(Vector2(rigidBody->GetVelocity().x, 0));
-//    }
-//
-//    if (minOverlap.side == CollisionSide::Left || minOverlap.side == CollisionSide::Right) {
-//        mOwner->SetPosition(mOwner->GetPosition() + Vector2(minOverlap.amount, 0));
-//        rigidBody->SetVelocity(Vector2(0, rigidBody->GetVelocity().y));
-//    }
+    if (minOverlap.side == CollisionSide::Top || minOverlap.side == CollisionSide::Down){
+        owner->SetPosition(owner->GetPosition() + Vector2(0, minOverlap.amount));
+        rigidBody->SetVelocity(Vector2(rigidBody->GetVelocity().x, rigidBody->GetVelocity().y * -1.0f));
+    }
+
+    if (minOverlap.side == CollisionSide::Left || minOverlap.side == CollisionSide::Right) {
+        owner->SetPosition(owner->GetPosition() + Vector2(minOverlap.amount, 0));
+        rigidBody->SetVelocity(Vector2(rigidBody->GetVelocity().x * -1.0f, rigidBody->GetVelocity().y));
+    }
 }
 
 void AABBColliderComponent::DetectCollision(RigidBodyComponent *rigidBody)
