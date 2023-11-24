@@ -81,7 +81,8 @@ AABBColliderComponent::Overlap AABBColliderComponent::GetMinOverlap(CircleCollid
 void AABBColliderComponent::ResolveCollisions(RigidBodyComponent *rigidBody, const Overlap& minOverlap)
 {
 
-    mOwner->SetPosition(Vector2(0,0));
+    SDL_Log("Resolvendo colisão");
+    rigidBody->GetOwner()->SetPosition(Vector2(0,0));
 
 //    if (minOverlap.side == CollisionSide::Top || minOverlap.side == CollisionSide::Down){
 //        mOwner->SetPosition(mOwner->GetPosition() + Vector2(0, minOverlap.amount));
@@ -119,7 +120,7 @@ void AABBColliderComponent::DetectCollision(RigidBodyComponent *rigidBody)
         if (::Intersect(*collider, *this)) {
             Overlap minOverlap = GetMinOverlap(collider);
             SDL_Log("Overlap: Amount: %f", minOverlap.amount);
-            ResolveCollisions(mOwner->GetComponent<RigidBodyComponent>(), minOverlap);
+            ResolveCollisions(collider->GetOwner()->GetComponent<RigidBodyComponent>(), minOverlap);
             responses.emplace(minOverlap.side, minOverlap);
             if (minOverlap.side == CollisionSide::Right || minOverlap.side == CollisionSide::Left) {
                 horizontalCollision = true;
