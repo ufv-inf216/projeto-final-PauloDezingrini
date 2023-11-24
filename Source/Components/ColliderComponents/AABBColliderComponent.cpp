@@ -6,6 +6,7 @@
 #include "AABBColliderComponent.h"
 #include "../../Actors/Actor.h"
 #include "../../Game.h"
+#include "../../Collision.h"
 
 AABBColliderComponent::AABBColliderComponent(class Actor* owner, int dx, int dy, int w, int h, ColliderLayer layer, int updateOrder)
         :Component(owner, updateOrder)
@@ -47,19 +48,18 @@ bool AABBColliderComponent::Intersect(const AABBColliderComponent& b) const
     return !notColliding;
 }
 
-AABBColliderComponent::Overlap AABBColliderComponent::GetMinOverlap(AABBColliderComponent* b) const
+AABBColliderComponent::Overlap AABBColliderComponent::GetMinOverlap(CircleColliderComponent* b) const
 {
 
     std::unordered_map<int, CollisionSide> overlaps;
 
     Vector2 aMax = GetMax();
     Vector2 aMin = GetMin();
-    Vector2 bMax = b->GetMax();
-    Vector2 bMin = b->GetMin();
-    overlaps.emplace(bMax.y - aMin.y, CollisionSide::Top);
-    overlaps.emplace(bMin.y - aMax.y, CollisionSide::Down);
-    overlaps.emplace(bMax.x - aMin.x, CollisionSide::Left);
-    overlaps.emplace(bMin.x - aMax.x, CollisionSide::Right);
+    Vector2 bCenter = b->GetCenter();
+    overlaps.emplace(bCenter.y - aMin.y, CollisionSide::Top);
+    overlaps.emplace(bCenter.y - aMax.y, CollisionSide::Down);
+    overlaps.emplace(bCenter.x - aMin.x, CollisionSide::Left);
+    overlaps.emplace(bCenter.x - aMax.x, CollisionSide::Right);
 
     float amount = INFINITY;
     CollisionSide side;
@@ -81,40 +81,44 @@ AABBColliderComponent::Overlap AABBColliderComponent::GetMinOverlap(AABBCollider
 void AABBColliderComponent::ResolveCollisions(RigidBodyComponent *rigidBody, const Overlap& minOverlap)
 {
 
-    if (minOverlap.side == CollisionSide::Top || minOverlap.side == CollisionSide::Down){
-        mOwner->SetPosition(mOwner->GetPosition() + Vector2(0, minOverlap.amount));
-        rigidBody->SetVelocity(Vector2(rigidBody->GetVelocity().x, 0));
-    }
+    mOwner->SetPosition(Vector2(0,0));
 
-    if (minOverlap.side == CollisionSide::Left || minOverlap.side == CollisionSide::Right) {
-        mOwner->SetPosition(mOwner->GetPosition() + Vector2(minOverlap.amount, 0));
-        rigidBody->SetVelocity(Vector2(0, rigidBody->GetVelocity().y));
-    }
+//    if (minOverlap.side == CollisionSide::Top || minOverlap.side == CollisionSide::Down){
+//        mOwner->SetPosition(mOwner->GetPosition() + Vector2(0, minOverlap.amount));
+//        rigidBody->SetVelocity(Vector2(rigidBody->GetVelocity().x, 0));
+//    }
+//
+//    if (minOverlap.side == CollisionSide::Left || minOverlap.side == CollisionSide::Right) {
+//        mOwner->SetPosition(mOwner->GetPosition() + Vector2(minOverlap.amount, 0));
+//        rigidBody->SetVelocity(Vector2(0, rigidBody->GetVelocity().y));
+//    }
 }
 
 void AABBColliderComponent::DetectCollision(RigidBodyComponent *rigidBody)
 {
-
     // Sort colliders by amount to the player (center-to-center)
-    auto colliders = mOwner->GetGame()->GetColliders();
+    auto colliders = mOwner->GetGame()->GetCircleColliders();
 
+    AABBColliderComponent *box = rigidBody->GetOwner()->GetComponent<AABBColliderComponent>();
 
-    std::sort(colliders.begin(), colliders.end(), [this](AABBColliderComponent *a, AABBColliderComponent *b) {
+    std::sort(colliders.begin(), colliders.end(), [this, box](CircleColliderComponent *a, CircleColliderComponent *b) {
         Vector2 center = this->GetCenter();
 
-        return (a->GetCenter() - center).LengthSq() < (b->GetCenter() - center).LengthSq();
+        return box->MinDistSq(a->GetCenter()) < box->MinDistSq(b->GetCenter());
     });
+
     std::unordered_map<CollisionSide, Overlap> responses;
 
     bool horizontalCollision = false;
     bool verticalCollision = false;
     for (auto collider : colliders) {
-        if (collider == this || !collider->IsEnabled()) {
+        if (!collider->IsEnabled()) {
             continue;
         }
 
-        if (Intersect(*collider)) {
+        if (::Intersect(*collider, *this)) {
             Overlap minOverlap = GetMinOverlap(collider);
+            SDL_Log("Overlap: Amount: %f", minOverlap.amount);
             ResolveCollisions(mOwner->GetComponent<RigidBodyComponent>(), minOverlap);
             responses.emplace(minOverlap.side, minOverlap);
             if (minOverlap.side == CollisionSide::Right || minOverlap.side == CollisionSide::Left) {

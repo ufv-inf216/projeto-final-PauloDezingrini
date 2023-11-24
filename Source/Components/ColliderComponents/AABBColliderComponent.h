@@ -6,6 +6,7 @@
 #include "../Component.h"
 #include "../../Math.h"
 #include "../RigidBodyComponent.h"
+#include "CircleColliderComponent.h"
 #include <vector>
 #include <set>
 
@@ -32,7 +33,7 @@ public:
     {
         float amount;
         CollisionSide side;
-        AABBColliderComponent *target;
+        CircleColliderComponent *target;
     };
 
     AABBColliderComponent(class Actor* owner, int dx, int dy, int w, int h,
@@ -49,7 +50,7 @@ public:
     ColliderLayer GetLayer() const { return mLayer; }
 
 private:
-    Overlap GetMinOverlap(AABBColliderComponent* b) const;
+    Overlap GetMinOverlap(CircleColliderComponent* b) const;
     void ResolveCollisions(RigidBodyComponent *rigidBody, const Overlap& minOverlap);
 
 
