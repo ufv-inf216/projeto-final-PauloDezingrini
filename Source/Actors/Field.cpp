@@ -75,7 +75,7 @@ void Field::CreateColliders() {
     y = 710.0f;
     new AABBColliderComponent(this, windowWidth- x, y - offset, length, offset, ColliderLayer::Wall);
 
-    if (mOnDebug) {
+   if (mOnDebug) {
         vertices.clear();
         vertices.emplace_back(windowWidth - x, y - offset);
         vertices.emplace_back(windowWidth - x + length, y - offset);
@@ -115,7 +115,7 @@ void Field::CreateColliders() {
     x = 290.0f;
     y = 795.0f;
     offset = 400.0f;
-    new AABBColliderComponent(this, windowWidth - x, windowHeight - y, length, offset, ColliderLayer::Goal);
+    mGoal1 = new AABBColliderComponent(this, windowWidth - x, windowHeight - y, length, offset, ColliderLayer::Goal);
 
     if (mOnDebug) {
         vertices.clear();
@@ -129,7 +129,7 @@ void Field::CreateColliders() {
 
     x = 1330;
     offset = 400;
-    new AABBColliderComponent(this, windowWidth - x, windowHeight - y, length, offset, ColliderLayer::Goal);
+    mGoal2 = new AABBColliderComponent(this, windowWidth - x, windowHeight - y, length, offset, ColliderLayer::Goal);
 
     if (mOnDebug) {
         vertices.clear();
@@ -146,13 +146,21 @@ void Field::CreateColliders() {
 void Field::OnUpdate(float deltaTime)
 {
     //check colision of the ball with one of both sides.
+    auto collider = this->GetGame()->GetBall()->GetComponent<AABBColliderComponent>();
+    if (this->mGoal1->Intersect(*collider)) {
+        this->HandleGoal(true);
+    }
+
+    if (this->mGoal2->Intersect(*collider)) {
+        this->HandleGoal(true);
+    }
     //handleGoal()
 }
 
 void Field::HandleGoal(bool team) {
     //decide who scored the goal, update the scores
 
-
+    SDL_Log("GOLGOGLGOGG", team);
 
     //reset match state
     mGame->ResetMatchState();

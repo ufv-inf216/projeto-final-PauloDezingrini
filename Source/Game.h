@@ -49,6 +49,7 @@ public:
 
     // Game-specific
     void ResetMatchState();
+    Ball * GetBall();
 
 private:
     void ProcessInput();

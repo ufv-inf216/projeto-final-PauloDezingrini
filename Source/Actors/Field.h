@@ -16,7 +16,8 @@ private:
     float mLength;
 
     bool mOnDebug = true;
-
+    AABBColliderComponent * mGoal1 = nullptr;
+    AABBColliderComponent * mGoal2 = nullptr;
     DrawSpriteComponent* mDrawComponent;
 
     void CreateColliders();

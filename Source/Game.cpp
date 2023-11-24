@@ -278,12 +278,20 @@ void Game::Shutdown()
 void Game::ResetMatchState()
 {
     //Disable movement for every actor except for the ball
-
+    for (Actor * character: mActors) {
+        character->setControllable(false);
+    }
     //wait ~2 seconds
 
+    //reset force on ball
+    mBall->SetPosition(Vector2(GetWindowWidth()/2, GetWindowHeight()/2));
 
     //Reset position for every actor
     for (Actor * character: mActors) {
         character->ResetDefaultPosition();
     }
+}
+
+Ball * Game::GetBall() {
+    return this->mBall;
 }

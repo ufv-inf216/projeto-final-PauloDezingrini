@@ -31,7 +31,6 @@ private:
     std::string mName;
     Vector2 defaultPos;
 
-
     RigidBodyComponent* mRigidBodyComponent;
     DrawSpriteComponent* mDrawSpriteComponent;
     AABBColliderComponent* mPlayerColliderComponent;

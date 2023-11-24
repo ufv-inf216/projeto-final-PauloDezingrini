@@ -19,6 +19,9 @@ Character::Character(Game* game, const std::string &name, const std::string &tex
 
 void Character::OnProcessInput(const uint8_t* state)
 {
+    if (!getControllable()) {
+        return;
+    }
     /*if (state[SDL_SCANCODE_D]) {
         mRigidBodyComponent->ApplyForce(Vector2(mForwardSpeed, 0));
     } else if (state[SDL_SCANCODE_A]){
