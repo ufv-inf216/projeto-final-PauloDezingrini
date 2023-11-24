@@ -51,9 +51,9 @@ public:
 
 private:
 
-    SDL_JoystickID getControllerInstanceID(SDL_GameController *controller);
-    std::vector<SDL_GameController *> findControllers();
     SDL_GameController *findController();
+    std::vector<SDL_GameController *> findControllers();
+    SDL_JoystickID getControllerInstanceID(SDL_GameController *controller);
     void ProcessInput();
     void UpdateGame();
     void UpdateCamera();
