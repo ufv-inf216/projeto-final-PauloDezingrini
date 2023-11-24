@@ -277,7 +277,9 @@ void Game::Shutdown()
 
 void Game::ResetMatchState()
 {
-    //Disable movement for every actor
+    //Disable movement for every actor except for the ball
+
+    //wait ~2 seconds
 
 
     //Reset position for every actor
