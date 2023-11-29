@@ -53,6 +53,7 @@ AABBColliderComponent::Overlap AABBColliderComponent::GetMinOverlap(CircleCollid
 
     std::unordered_map<int, CollisionSide> overlaps;
 
+    float radius = b->GetRadius();
     Vector2 aMax = GetMax();
     Vector2 aMin = GetMin();
     Vector2 bCenter = b->GetCenter();
@@ -80,17 +81,26 @@ AABBColliderComponent::Overlap AABBColliderComponent::GetMinOverlap(CircleCollid
 
 void AABBColliderComponent::ResolveCollisions(RigidBodyComponent *rigidBody, const Overlap& minOverlap)
 {
+    int side = -1;
+    if (minOverlap.side == CollisionSide::Top) {
+        side = 1;
+    } else if (minOverlap.side == CollisionSide::Down) {
+        side = 2;
+    } else if (minOverlap.side == CollisionSide::Left) {
+        side = 3;
+    } else {
+        side = 4;
+    }
 
-    SDL_Log("Resolvendo colisão");
     auto owner = rigidBody->GetOwner();
 
     if (minOverlap.side == CollisionSide::Top || minOverlap.side == CollisionSide::Down){
-        owner->SetPosition(owner->GetPosition() + Vector2(0, minOverlap.amount));
+//        owner->SetPosition(owner->GetPosition() + Vector2(0, minOverlap.amount));
         rigidBody->SetVelocity(Vector2(rigidBody->GetVelocity().x, rigidBody->GetVelocity().y * -1.0f));
     }
 
     if (minOverlap.side == CollisionSide::Left || minOverlap.side == CollisionSide::Right) {
-        owner->SetPosition(owner->GetPosition() + Vector2(minOverlap.amount, 0));
+//        owner->SetPosition(owner->GetPosition() + Vector2(minOverlap.amount, 0));
         rigidBody->SetVelocity(Vector2(rigidBody->GetVelocity().x * -1.0f, rigidBody->GetVelocity().y));
     }
 }
@@ -100,7 +110,7 @@ void AABBColliderComponent::DetectCollision(RigidBodyComponent *rigidBody)
     // Sort colliders by amount to the player (center-to-center)
     auto colliders = mOwner->GetGame()->GetCircleColliders();
 
-    AABBColliderComponent *box = rigidBody->GetOwner()->GetComponent<AABBColliderComponent>();
+    auto *box = rigidBody->GetOwner()->GetComponent<AABBColliderComponent>();
 
     std::sort(colliders.begin(), colliders.end(), [this, box](CircleColliderComponent *a, CircleColliderComponent *b) {
         Vector2 center = this->GetCenter();
