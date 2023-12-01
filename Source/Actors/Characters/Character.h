@@ -14,7 +14,7 @@
 
 class Character : public Actor {
 public:
-    explicit Character(Game* game, const std::string &name, const std::string &texturePath, bool team, float forwardSpeed = 1500.0f, float mass = 1.0f, float size = 64.0f);
+    explicit Character(Game* game, const std::string &name, const std::string &texturePath, bool team, float size = 64.0f, float forwardSpeed = 1500.0f, float mass = 1.0f);
 
     void OnProcessInput(const Uint8* keyState) override;
     void OnUpdate(float deltaTime) override;

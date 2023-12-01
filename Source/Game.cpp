@@ -72,9 +72,9 @@ bool Game::Initialize()
 void Game::InitializeActors()
 {
     auto field = new Field(this, 1280, 860);
-    mBall = new Ball(this, 32, 32);
+    mBall = new Ball(this, 32, 1);
 
-    auto player = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", true);
+    auto player = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", true, 48);
     player->SetPosition(Vector2(mWindowWidth/2 - 64, mWindowHeight/2 - 64));
 }
 

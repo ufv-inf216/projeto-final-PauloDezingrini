@@ -14,7 +14,7 @@ Ball::Ball(Game *game, float size, float mass):
 {
     SetPosition(Vector2(game->GetWindowWidth()/2, game->GetWindowHeight()/2));
 
-    mColliderComponent = new CircleColliderComponent(this, size);
+    mColliderComponent = new CircleColliderComponent(this, size/2);
 //    mColliderComponent = new AABBColliderComponent(this, 0, 0, size, size, ColliderLayer::Goal);
 
     mRigidBodyComponent = new RigidBodyComponent(this, mass);

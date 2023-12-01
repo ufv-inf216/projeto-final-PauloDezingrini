@@ -5,7 +5,7 @@
 #include "Character.h"
 #include "../../Game.h"
 
-Character::Character(Game* game, const std::string &name, const std::string &texturePath, bool team, float forwardSpeed, float mass, float size)
+Character::Character(Game* game, const std::string &name, const std::string &texturePath, bool team, float size, float forwardSpeed, float mass)
         :Actor(game)
         ,mName(name)
         ,mTeam(team)
@@ -15,7 +15,7 @@ Character::Character(Game* game, const std::string &name, const std::string &tex
     mRigidBodyComponent = new RigidBodyComponent(this, mass);
     mDrawSpriteComponent = new DrawSpriteComponent(this, texturePath, mSize, mSize);
 //    mPlayerColliderComponent = new AABBColliderComponent(this, 0, 0, 64, 64, ColliderLayer::Player);
-    mPlayerColliderComponent = new CircleColliderComponent(this, 64);
+    mPlayerColliderComponent = new CircleColliderComponent(this, size/2);
 }
 
 void Character::OnProcessInput(const uint8_t* state)

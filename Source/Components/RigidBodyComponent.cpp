@@ -54,6 +54,10 @@ void RigidBodyComponent::Update(float deltaTime)
     if (collider) {
         collider->DetectCollision(this);
     }
+    auto circle = mOwner->GetComponent<CircleColliderComponent>();
+    if (circle) {
+        circle->DetectCollision(this);
+    }
 
     mAcceleration.Set(0.f, 0.f);
 }

@@ -5,6 +5,7 @@
 #pragma once
 #include "../Component.h"
 #include "../../Math.h"
+#include "../RigidBodyComponent.h"
 #include <vector>
 
 class CircleColliderComponent : public Component
@@ -19,6 +20,7 @@ public:
     const Vector2& GetCenter() const;
 
     bool Intersect(const CircleColliderComponent& b) const;
+    void DetectCollision(RigidBodyComponent *rigidBody);
 
 private:
     Vector2 mCenter;
