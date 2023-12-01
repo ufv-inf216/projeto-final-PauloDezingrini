@@ -17,7 +17,7 @@ Ball::Ball(Game *game, float size, float mass):
     mColliderComponent = new CircleColliderComponent(this, size/2);
 //    mColliderComponent = new AABBColliderComponent(this, 0, 0, size, size, ColliderLayer::Goal);
 
-    mRigidBodyComponent = new RigidBodyComponent(this, mass);
+    mRigidBodyComponent = new RigidBodyComponent(this, mass, 1.0f);
 
     mDrawComponent = new DrawSpriteComponent(this, "../Assets/Sprites/Balls/ball1.png", size, size);
 

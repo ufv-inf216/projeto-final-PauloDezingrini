@@ -58,6 +58,7 @@ void CircleColliderComponent::DetectCollision(RigidBodyComponent *rigidBody) {
         if (this != collider) {
 
             if (circle->Intersect(*collider)) {
+                Vector2 pos = rigidBody->GetOwner()->GetPosition();
                 rigidBody->SetVelocity(rigidBody->GetVelocity() * -1);
                 auto colliderRigidBody = collider->GetOwner()->GetComponent<RigidBodyComponent>();
                 colliderRigidBody->SetVelocity(rigidBody->GetVelocity() * -1);

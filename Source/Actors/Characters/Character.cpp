@@ -12,7 +12,7 @@ Character::Character(Game* game, const std::string &name, const std::string &tex
         ,mForwardSpeed(forwardSpeed)
         ,mSize(size)
 {
-    mRigidBodyComponent = new RigidBodyComponent(this, mass);
+    mRigidBodyComponent = new RigidBodyComponent(this, mass, 2.0f);
     mDrawSpriteComponent = new DrawSpriteComponent(this, texturePath, mSize, mSize);
 //    mPlayerColliderComponent = new AABBColliderComponent(this, 0, 0, 64, 64, ColliderLayer::Player);
     mPlayerColliderComponent = new CircleColliderComponent(this, size/2);
