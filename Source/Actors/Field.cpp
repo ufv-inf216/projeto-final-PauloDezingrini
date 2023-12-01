@@ -152,16 +152,14 @@ void Field::OnUpdate(float deltaTime)
     }
 
     if (this->mGoal2->Intersect(*collider)) {
-        this->HandleGoal(true);
+        this->HandleGoal(false);
     }
-    //handleGoal()
 }
 
 void Field::HandleGoal(bool team) {
     //decide who scored the goal, update the scores
 
-    SDL_Log("GOLGOGLGOGG", team);
-
+    SDL_Log("Gol! %b", team);
     //reset match state
     mGame->ResetMatchState();
 }

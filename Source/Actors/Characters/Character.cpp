@@ -22,7 +22,7 @@ void Character::OnProcessInput(const uint8_t* state)
     if (!getControllable()) {
         return;
     }
-    /*if (state[SDL_SCANCODE_D]) {
+    if (state[SDL_SCANCODE_D]) {
         mRigidBodyComponent->ApplyForce(Vector2(mForwardSpeed, 0));
     } else if (state[SDL_SCANCODE_A]){
         mRigidBodyComponent->ApplyForce(Vector2(-mForwardSpeed, 0));
@@ -32,7 +32,7 @@ void Character::OnProcessInput(const uint8_t* state)
         mRigidBodyComponent->ApplyForce(Vector2(0, -mForwardSpeed));
     } else if (state[SDL_SCANCODE_S]){
         mRigidBodyComponent->ApplyForce(Vector2(0, mForwardSpeed));
-    }*/
+    }
 }
 
 void Character::OnUpdate(float deltaTime)
