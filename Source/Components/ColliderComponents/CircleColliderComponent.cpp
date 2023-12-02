@@ -109,8 +109,11 @@ void CircleColliderComponent::DetectCollision(RigidBodyComponent *rigidBody) {
             if (circle->Intersect(*collider)) {
                 Overlap minOverlap = GetMinOverlap(collider);
                 ResolveCollisions(rigidBody, minOverlap);
-
-
+                if (minOverlap.side) {
+                    verticalCollision = true;
+                } else {
+                    horizontalCollision = true;
+                }
             }
         }
 
