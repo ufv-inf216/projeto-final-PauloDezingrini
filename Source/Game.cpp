@@ -78,7 +78,7 @@ void Game::InitializeActors()
     new DrawTileComponent(map, "../Assets/Map/map_grass.csv", "../Assets/Map/groundGrass_mown.png", 1472, 1024, 32);
     new DrawTileComponent(map, "../Assets/Map/map_elements.csv", "../Assets/Map/elements.png", 1472, 1024, 32);
 
-    auto field = new Field(this, 1280, 860);
+//    auto field = new Field(this, 1280, 860);
     mBall = new Ball(this, 32, 1);
 
     auto player = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", true, 48);
