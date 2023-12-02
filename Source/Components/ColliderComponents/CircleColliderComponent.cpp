@@ -37,6 +37,55 @@ bool CircleColliderComponent::Intersect(const CircleColliderComponent& c) const
 
 }
 
+
+CircleColliderComponent::Overlap CircleColliderComponent::GetMinOverlap(CircleColliderComponent *b) const {
+
+    Vector2 bCenter = b->GetCenter();
+    Vector2 center = GetCenter();
+
+    float verticalDist = bCenter.y - center.y;
+    float horizontalDist = bCenter.x - center.x;
+    float amount;
+    bool side;
+
+    if (verticalDist < horizontalDist) {
+        side = true;
+    } else {
+        side = false;
+    }
+
+    Vector2 diff = GetCenter() - b->GetCenter();
+    float rad = GetRadius() + b->GetRadius();
+
+    Overlap minOverlap{
+            .amount = rad - diff.Length(),
+            .side = side,
+            .target = b
+    };
+    return minOverlap;
+}
+
+void CircleColliderComponent::ResolveCollisions(RigidBodyComponent *rigidBody,
+                                                const CircleColliderComponent::Overlap &minOverlap) {
+
+    auto owner = rigidBody->GetOwner();
+    Vector2 pos = owner->GetPosition();
+
+    rigidBody->SetVelocity(rigidBody->GetVelocity() * -1);
+    auto colliderRigidBody = minOverlap.target->GetOwner()->GetComponent<RigidBodyComponent>();
+    colliderRigidBody->SetVelocity(rigidBody->GetVelocity() * -1);
+
+    if (minOverlap.side) {
+        pos.y += Vector2::Normalize(rigidBody->GetVelocity()).y * minOverlap.amount;
+    } else {
+        pos.x += Vector2::Normalize(rigidBody->GetVelocity()).x * minOverlap.amount;
+    }
+
+    owner->SetPosition(pos);
+
+}
+
+
 void CircleColliderComponent::DetectCollision(RigidBodyComponent *rigidBody) {
     auto colliders = mOwner->GetGame()->GetCircleColliders();
 
@@ -58,10 +107,10 @@ void CircleColliderComponent::DetectCollision(RigidBodyComponent *rigidBody) {
         if (this != collider) {
 
             if (circle->Intersect(*collider)) {
-                Vector2 pos = rigidBody->GetOwner()->GetPosition();
-                rigidBody->SetVelocity(rigidBody->GetVelocity() * -1);
-                auto colliderRigidBody = collider->GetOwner()->GetComponent<RigidBodyComponent>();
-                colliderRigidBody->SetVelocity(rigidBody->GetVelocity() * -1);
+                Overlap minOverlap = GetMinOverlap(collider);
+                ResolveCollisions(rigidBody, minOverlap);
+
+
             }
         }
 
@@ -73,3 +122,5 @@ void CircleColliderComponent::DetectCollision(RigidBodyComponent *rigidBody) {
     // Callback only for closest (first) collision
 //    mOwner->OnCollision(responses);
 }
+
+

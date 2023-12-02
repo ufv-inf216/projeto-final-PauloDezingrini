@@ -82,32 +82,27 @@ AABBColliderComponent::Overlap AABBColliderComponent::GetMinOverlap(CircleCollid
 void AABBColliderComponent::ResolveCollisions(RigidBodyComponent *rigidBody, const Overlap& minOverlap)
 {
     auto owner = rigidBody->GetOwner();
+    Vector2 pos = owner->GetPosition();
 
     if (minOverlap.side == CollisionSide::Top || minOverlap.side == CollisionSide::Down){
-        float dy = GetMin().y - minOverlap.target->GetCenter().y;
-        dy = Math::Max(dy, minOverlap.target->GetCenter().y - GetMax().y);
-        Vector2 pos = owner->GetPosition();
-        if (minOverlap.side == CollisionSide::Top) {
-            pos.y -= dy;
-        } else {
-            pos.y += dy;
-        }
-        rigidBody->GetOwner()->SetPosition(pos);
         rigidBody->SetVelocity(Vector2(rigidBody->GetVelocity().x, rigidBody->GetVelocity().y * -1.0f));
+        if (minOverlap.side == CollisionSide::Down) {
+            pos.y += Vector2::Normalize(rigidBody->GetVelocity()).y * minOverlap.amount;
+        } else {
+            pos.y -= Vector2::Normalize(rigidBody->GetVelocity()).y * minOverlap.amount;
+        }
     }
 
     if (minOverlap.side == CollisionSide::Left || minOverlap.side == CollisionSide::Right) {
-        float dx = GetMin().x - minOverlap.target->GetCenter().x;
-        dx = Math::Max(dx, minOverlap.target->GetCenter().x - GetMax().x);
-        Vector2 pos = owner->GetPosition();
-        if (minOverlap.side == CollisionSide::Left) {
-            pos.x -= dx;
-        } else {
-            pos.x += dx;
-        }
-        rigidBody->GetOwner()->SetPosition(pos);
         rigidBody->SetVelocity(Vector2(rigidBody->GetVelocity().x * -1.0f, rigidBody->GetVelocity().y));
+        if (minOverlap.side == CollisionSide::Right) {
+            pos.x += Vector2::Normalize(rigidBody->GetVelocity()).x * minOverlap.amount;
+        } else {
+            pos.x -= Vector2::Normalize(rigidBody->GetVelocity()).x * minOverlap.amount;
+        }
     }
+
+    owner->SetPosition(pos);
 }
 
 void AABBColliderComponent::DetectCollision(RigidBodyComponent *rigidBody)
