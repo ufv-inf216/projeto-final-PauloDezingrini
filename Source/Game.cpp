@@ -16,6 +16,7 @@
 #include "Actors/Actor.h"
 #include "Actors/Spawner.h"
 #include "Components/DrawComponents/DrawComponent.h"
+#include "Components/DrawComponents/DrawTileComponent.h"
 #include "Components/ColliderComponents/AABBColliderComponent.h"
 #include "Actors/Field.h"
 #include "Actors/Characters/Character.h"
@@ -71,6 +72,12 @@ bool Game::Initialize()
 
 void Game::InitializeActors()
 {
+
+    auto map = new Actor(this);
+    new DrawTileComponent(map, "../Assets/Map/map_ground.csv", "../Assets/Map/groundGravel.png", 1472, 1024, 32);
+    new DrawTileComponent(map, "../Assets/Map/map_grass.csv", "../Assets/Map/groundGrass_mown.png", 1472, 1024, 32);
+    new DrawTileComponent(map, "../Assets/Map/map_elements.csv", "../Assets/Map/elements.png", 1472, 1024, 32);
+
     auto field = new Field(this, 1280, 860);
     mBall = new Ball(this, 32, 1);
 

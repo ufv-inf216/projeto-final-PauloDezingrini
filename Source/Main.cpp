@@ -10,7 +10,7 @@
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 1440;
-const int SCREEN_HEIGHT = 1020;
+const int SCREEN_HEIGHT = 1056;
 
 int main(int argc, char** argv)
 {
