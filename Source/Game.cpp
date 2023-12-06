@@ -74,8 +74,11 @@ void Game::InitializeActors()
     auto field = new Field(this, 1280, 860);
     mBall = new Ball(this, 32, 32);
 
-    auto player = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", true);
-    player->SetPosition(Vector2(mWindowWidth/2 - 64, mWindowHeight/2 - 64));
+    auto player0 = new Character(this, "Player0", "../Assets/Sprites/Characters/placeholder.png", true);
+    auto player1 = new Character(this, "Player1", "../Assets/Sprites/Characters/placeholder.png", true);
+
+    player0->SetPosition(Vector2(mWindowWidth/2 - 64, mWindowHeight/2 - 64));
+    player1->SetPosition(Vector2(mWindowWidth/2 + 64, mWindowHeight/2 + 64));
 }
 
 void Game::LoadLevel(const std::string& levelPath, const int width, const int height)
@@ -125,22 +128,63 @@ void Game::ProcessInput()
     std::vector<SDL_GameController*> controllers = findControllers();
 
     SDL_Event event;
-    while (SDL_PollEvent(&event))
-    {
-        switch (event.type)
+
+    if(controllers.empty()) { //caso nao tenha controle, processar comandos de teclado
+        std::cout << "Nenhum controle encontrado" << std::endl;
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_QUIT:
+                    Quit();
+                    break;
+            }
+        }
+        const Uint8* state = SDL_GetKeyboardState(nullptr);
+
+        for (auto actor : mActors)
         {
-            case SDL_QUIT:
-                Quit();
-                break;
+            std::cout << "Processando input" << std::endl;
+
+
+            actor->ProcessInput(state);
+        }
+
+        return;
+
+    }
+
+
+    for(auto controller : controllers) {
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_QUIT:
+                    Quit();
+                    break;
+                case SDL_CONTROLLERDEVICEADDED:
+                    if (!controller) {
+                        controller = SDL_GameControllerOpen(event.cdevice.which);
+                    }
+                    break;
+                case SDL_CONTROLLERDEVICEREMOVED:
+                    if (controller && event.cdevice.which == getControllerInstanceID(controller)) {
+                        SDL_GameControllerClose(controller);
+                        controller = findController();
+                    }
+                    break;
+                case SDL_CONTROLLERBUTTONDOWN: //caso tenha apertado um botão, chamar actor->ProcessInput()
+                    if (controller && event.cdevice.which == getControllerInstanceID(controller)) {
+                        for (auto actor : mActors)
+                        {
+                            std::cout << "Processando input" << std::endl;
+
+                            actor->ProcessInput();
+                        }
+                    }
+            }
+
         }
     }
 
-    const Uint8* state = SDL_GetKeyboardState(nullptr);
 
-    for (auto actor : mActors)
-    {
-        actor->ProcessInput(state);
-    }
 }
 
 void Game::UpdateGame()

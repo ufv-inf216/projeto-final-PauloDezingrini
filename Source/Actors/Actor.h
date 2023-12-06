@@ -29,8 +29,8 @@ public:
     // Update function called from Game (not overridable)
     void Update(float deltaTime);
     // ProcessInput function called from Game (not overridable)
-    void ProcessInput(const Uint8* keyState);
 
+    void ProcessInput(const Uint8* keyState);
     // Position getter/setter
     const Vector2& GetPosition() const { return mPosition; }
     void SetPosition(const Vector2& pos) { mPosition = pos; }

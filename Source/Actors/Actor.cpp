@@ -10,6 +10,7 @@
 #include "../Game.h"
 #include "../Components/Component.h"
 #include <algorithm>
+#include <iostream>
 
 Actor::Actor(Game* game)
         : mState(ActorState::Active)
