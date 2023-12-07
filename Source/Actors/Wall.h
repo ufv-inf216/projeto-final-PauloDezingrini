@@ -14,8 +14,6 @@ class Wall : public Actor {
 public:
     Wall(Game* game, float dx, float dy, float w, float h, ColliderLayer layer, bool isGoal = false);
 
-    void SetTeam(bool team) { mTeam = team; }
-    bool getTeam() { return mTeam; }
 private:
     bool mIsGoal;
     bool mTeam;

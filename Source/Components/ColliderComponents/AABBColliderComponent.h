@@ -2,6 +2,9 @@
 // Created by Lucas N. Ferreira on 28/09/23.
 //
 
+#ifndef AABB
+#define AABB
+
 #pragma once
 #include "../Component.h"
 #include "../../Math.h"
@@ -60,3 +63,5 @@ private:
 
     ColliderLayer mLayer;
 };
+
+#endif
