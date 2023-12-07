@@ -11,7 +11,7 @@ public:
     // (Lower draw order corresponds with further back)
     DrawTileComponent(class Actor* owner,
             const std::string &tileData, const std::string &tileImgs,
-            int width, int height, int tileSize, int drawOrder = 50);
+            int width, int height, int tileSize, int tilesPerRow, int drawOrder = 50);
     ~DrawTileComponent() override;
 
     void Draw(SDL_Renderer* renderer) override;
@@ -21,4 +21,5 @@ private:
 
     std::vector<std::vector<int>> mTiles;
     int mTileSize;
+    int mTilesPerRow;
 };

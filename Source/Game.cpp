@@ -20,6 +20,8 @@
 #include "Components/ColliderComponents/AABBColliderComponent.h"
 #include "Actors/Field.h"
 #include "Actors/Characters/Character.h"
+#include "CSV.h"
+#include "Actors/Wall.h"
 
 const int LEVEL_WIDTH = 213;
 const int LEVEL_HEIGHT = 14;
@@ -64,6 +66,15 @@ bool Game::Initialize()
 
     mTicksCount = SDL_GetTicks();
 
+    spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (1).png");
+    spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (2).png");
+    spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (3).png");
+
+    spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (1).png");
+    spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (2).png");
+    spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (3).png");
+
+
     // Init all game actors
     InitializeActors();
 
@@ -72,17 +83,14 @@ bool Game::Initialize()
 
 void Game::InitializeActors()
 {
+    mMap = new Actor(this);
+    new DrawTileComponent(mMap, "../Assets/Map/map_grass.csv", "../Assets/Map/groundGrass_mown.png", 1472, 1024, 32, 26);
+    new DrawTileComponent(mMap, "../Assets/Map/map_ground.csv", "../Assets/Map/groundGravel.png", 1472, 1024, 32, 26);
+    new DrawTileComponent(mMap, "../Assets/Map/map_elements.csv", "../Assets/Map/elements.png", 1472, 1024, 32, 18);
 
-    auto map = new Actor(this);
-    new DrawTileComponent(map, "../Assets/Map/map_ground.csv", "../Assets/Map/groundGravel.png", 1472, 1024, 32);
-    new DrawTileComponent(map, "../Assets/Map/map_grass.csv", "../Assets/Map/groundGrass_mown.png", 1472, 1024, 32);
-    new DrawTileComponent(map, "../Assets/Map/map_elements.csv", "../Assets/Map/elements.png", 1472, 1024, 32);
+    LoadData("../Assets/Map/Objects.csv");
 
 //    auto field = new Field(this, 1280, 860);
-    mBall = new Ball(this, 32, 1);
-
-    auto player = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", true, 48);
-    player->SetPosition(Vector2(mWindowWidth/2 - 64, mWindowHeight/2 - 64));
 }
 
 void Game::LoadLevel(const std::string& levelPath, const int width, const int height)
@@ -274,6 +282,63 @@ SDL_Texture* Game::LoadTexture(const std::string& texturePath) {
         return nullptr;
     }
     return texture;
+}
+
+void Game::LoadData(const std::string& fileName) {
+    std::ifstream file(fileName);
+    if (!file.is_open())
+    {
+        SDL_Log("Failed to load paths: %s", fileName.c_str());
+    }
+
+    int row = 0;
+
+    std::string line;
+    while (!file.eof())
+    {
+        std::getline(file, line);
+
+        if(!line.empty())
+        {
+            auto tiles = CSVHelper::Split(line);
+
+            if(tiles[0] == "Type") {
+                continue;
+            }
+
+            int x = std::stoi(tiles[1]) - 16;
+            int y = std::stoi(tiles[2]) - 16;
+            int width = std::stoi(tiles[3]);
+            int height = std::stoi(tiles[4]);
+            if(tiles[0] == "Wall") {
+                new Wall(this, x, y, width, height, ColliderLayer::Wall);
+            } else if(tiles[0] == "Goal") {
+                auto goal = new Wall(this, x, y, width, height, ColliderLayer::Goal, true);
+                goal->SetTeam(tiles[5] == "True");
+                mGoals.push_back(goal);
+            } else if(tiles[0] == "Player") {
+                if (tiles[5] == "True") {
+                    bool isPlayer = numPlayersTeam > 0;
+                    numPlayersTeam--;
+                    auto player = new Character(this, "Teste", spritesBlue.back(), tiles[5] == "True", isPlayer, 48);
+                    player->SetPosition(Vector2(x, y));
+                    spritesBlue.pop_back();
+                } else {
+                    bool isPlayer = numPlayersTeam > 0;
+                    numPlayersTeam--;
+                    auto player = new Character(this, "Teste", spritesRed.back(), tiles[5] == "True", isPlayer, 48);
+                    player->SetPosition(Vector2(x, y));
+                    spritesRed.pop_back();
+                }
+            }
+            else if(tiles[0] == "Ball") {
+                mBall = new Ball(this, 24, 1);
+                mBall->SetPosition(Vector2(x,y));
+            } else if(tiles[0] == "HUD") {
+
+            }
+        }
+    }
 }
 
 void Game::Shutdown()

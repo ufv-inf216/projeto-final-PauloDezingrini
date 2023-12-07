@@ -8,9 +8,10 @@
 #include "../../Actors/Actor.h"
 #include "../../Game.h"
 
-DrawTileComponent::DrawTileComponent(class Actor* owner, const std::string &tileData, const std::string &tileImg, int width, int height, int tileSize, int drawOrder)
+DrawTileComponent::DrawTileComponent(class Actor* owner, const std::string &tileData, const std::string &tileImg, int width, int height, int tileSize, int tilesPerRow, int drawOrder)
         :DrawSpriteComponent(owner, tileImg, width, height, drawOrder)
         ,mTileSize(tileSize)
+        ,mTilesPerRow(tilesPerRow)
 {
     LoadTileCSV(tileData);
 }
@@ -64,10 +65,8 @@ void DrawTileComponent::Draw(SDL_Renderer* renderer)
                 continue;
             }
 
-            int tilesPerRow = mWidth/mTileSize;
-
-            int x = (tile % tilesPerRow) * mTileSize;
-            int y = (tile / tilesPerRow) * mTileSize;
+            int x = (tile % mTilesPerRow) * mTileSize;
+            int y = (tile / mTilesPerRow) * mTileSize;
 
             pos.x += j * mTileSize;
             pos.y += i * mTileSize;
