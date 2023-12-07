@@ -11,6 +11,8 @@
 #include <vector>
 #include "Math.h"
 #include "Actors/Ball.h"
+#include "Actors/Wall.h"
+#include "Actors/Characters/Character.h"
 #include <string>
 
 class Game
@@ -61,6 +63,8 @@ private:
 
     // Game-specific
     void LoadLevel(const std::string& texturePath, int width, int height);
+    void LoadData(const std::string& fileName);
+
 
     // All the actors in the game
     std::vector<class Actor*> mActors;
@@ -91,5 +95,11 @@ private:
     Vector2 mCameraPos;
 
     // Game-specific
+    int numPlayersTeam = 1;
     Ball* mBall;
+    Actor* mMap;
+    std::vector<std::string> spritesBlue;
+    std::vector<std::string> spritesRed;
+    std::vector<Wall*> mGoals;
+    std::vector<Character*> mCharacters;
 };

@@ -50,6 +50,7 @@ add_executable(${PROJECT_NAME}
         Source/Collision.h
         Source/Actors/Wall.cpp
         Source/Actors/Wall.h
+        Source/Components/DrawComponents/DrawTileComponent.cpp
 )
 
 ####### DO NOT EDIT BELLOW
