@@ -72,6 +72,9 @@ public:
     void SetOnGround() { mIsOnGround = true; };
     void SetOffGround() { mIsOnGround = false; };
     bool IsOnGround() const { return mIsOnGround; };
+    virtual void ResetDefaultPosition ();
+    void setControllable(bool controllable) { mControllable = controllable; }
+    bool getControllable() { return mControllable; }
 
     // Any actor-specific collision code (overridable)
     virtual void OnCollision(std::unordered_map<CollisionSide, AABBColliderComponent::Overlap>& responses);
@@ -98,6 +101,7 @@ protected:
 
     // Game specific
     bool mIsOnGround;
+    bool mControllable;
 
 private:
     friend class Component;

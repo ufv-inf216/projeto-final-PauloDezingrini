@@ -91,7 +91,20 @@ void Game::InitializeActors()
     LoadData("../Assets/Map/Objects.csv");
 
 //    auto field = new Field(this, 1280, 860);
-}
+    //Create an array of players
+//     auto player = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", true);
+//     auto player2 = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", false);
+
+//     player->SetDefaultPosition(Vector2(mWindowWidth/2 - 64, mWindowHeight/2 - 64));
+//     player->SetPosition(player->GetDefaultPosition());
+
+//     player2->SetDefaultPosition(Vector2(mWindowWidth/2 - 200, mWindowHeight/2 - 150));
+//     player2->SetPosition(player2->GetDefaultPosition());
+
+
+//     player->setControllable(true);
+//     player2->setControllable(true);
+// }
 
 void Game::LoadLevel(const std::string& levelPath, const int width, const int height)
 {
@@ -351,4 +364,32 @@ void Game::Shutdown()
     SDL_DestroyRenderer(mRenderer);
     SDL_DestroyWindow(mWindow);
     SDL_Quit();
+}
+
+void Game::ResetMatchState()
+{
+    //Disable movement for every actor except for the ball
+    for (Actor * character: mActors) {
+        character->setControllable(false);
+    }
+    //wait ~2 seconds
+    SDL_Delay(2000);
+
+    //reset force on ball
+    mBall->SetPosition(Vector2(GetWindowWidth()/2, GetWindowHeight()/2));
+
+    //Reset position for every actor
+    for (Actor * character: mActors) {
+        character->ResetDefaultPosition();
+
+    }
+    SDL_Delay(2000);
+    //Enable movement for every player
+    for (Actor * character: mActors) {
+        character->setControllable(true);
+    }
+}
+
+Ball * Game::GetBall() {
+    return this->mBall;
 }
