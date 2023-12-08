@@ -37,7 +37,7 @@ Game::Game(int windowWidth, int windowHeight)
         ,mWindowWidth(windowWidth)
         ,mWindowHeight(windowHeight)
 {
-
+    mScore = new std::unordered_map<bool, int>();
 }
 
 bool Game::Initialize()
@@ -90,7 +90,24 @@ void Game::InitializeActors()
 
     LoadData("../Assets/Map/Objects.csv");
 
+    mScore->insert(std::make_pair<bool, int>(true, 0));
+    mScore->insert(std::make_pair<bool, int>(false, 0));
+
 //    auto field = new Field(this, 1280, 860);
+    //Create an array of players
+//     auto player = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", true);
+//     auto player2 = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", false);
+
+//     player->SetDefaultPosition(Vector2(mWindowWidth/2 - 64, mWindowHeight/2 - 64));
+//     player->SetPosition(player->GetDefaultPosition());
+
+//     player2->SetDefaultPosition(Vector2(mWindowWidth/2 - 200, mWindowHeight/2 - 150));
+//     player2->SetPosition(player2->GetDefaultPosition());
+
+
+//     player->setControllable(true);
+//     player2->setControllable(true);
+//
 }
 
 void Game::LoadLevel(const std::string& levelPath, const int width, const int height)
@@ -320,20 +337,25 @@ void Game::LoadData(const std::string& fileName) {
                 if (tiles[5] == "True") {
                     bool isPlayer = numPlayersTeam > 0;
                     numPlayersTeam--;
-                    auto player = new Character(this, "Teste", spritesBlue.back(), tiles[5] == "True", isPlayer, 48);
+                    auto player = new Character(this, "Teste", spritesBlue.back(),  isPlayer, 48);
                     player->SetPosition(Vector2(x, y));
+                    player->SetDefaultPosition(player->GetPosition());
+                    player->SetTeam(tiles[5] == "True");
                     spritesBlue.pop_back();
                 } else {
                     bool isPlayer = numPlayersTeam > 0;
                     numPlayersTeam--;
                     auto player = new Character(this, "Teste", spritesRed.back(), tiles[5] == "True", isPlayer, 48);
                     player->SetPosition(Vector2(x, y));
+                    player->SetDefaultPosition(player->GetPosition());
+                    player->SetTeam(tiles[5] == "True");
                     spritesRed.pop_back();
                 }
             }
             else if(tiles[0] == "Ball") {
                 mBall = new Ball(this, 24, 1);
                 mBall->SetPosition(Vector2(x,y));
+                mBall->SetDefaultPosition(Vector2(x, y));
             } else if(tiles[0] == "HUD") {
 
             }
@@ -351,4 +373,33 @@ void Game::Shutdown()
     SDL_DestroyRenderer(mRenderer);
     SDL_DestroyWindow(mWindow);
     SDL_Quit();
+}
+
+void Game::ResetMatchState()
+{
+    //Disable movement for every actor except for the ball
+    for (Actor * character: mActors) {
+        character->SetControllable(false);
+    }
+    //wait ~2 seconds
+    SDL_Delay(2000);
+
+    auto rigidBody = mBall->GetComponent<RigidBodyComponent>();
+    rigidBody->SetVelocity(Vector2::Zero);
+    rigidBody->SetAcceleration(Vector2::Zero);
+    mBall->ResetDefaultPosition();
+
+    //Reset position for every actor
+    for (Actor * actor: mActors) {
+        actor->ResetDefaultPosition();
+    }
+    SDL_Delay(2000);
+    //Enable movement for every player
+    for (Actor * character: mActors) {
+        character->SetControllable(true);
+    }
+}
+
+Ball * Game::GetBall() {
+    return this->mBall;
 }

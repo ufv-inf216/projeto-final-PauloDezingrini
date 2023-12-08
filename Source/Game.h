@@ -47,6 +47,8 @@ public:
     Vector2& GetCameraPos() { return mCameraPos; };
     void SetCameraPos(const Vector2& position) { mCameraPos = position; };
 
+    std::unordered_map<bool, int>* GetScore() { return mScore; }
+
     // Window functions
     int GetWindowWidth() const { return mWindowWidth; }
     int GetWindowHeight() const { return mWindowHeight; }
@@ -54,6 +56,8 @@ public:
     SDL_Texture* LoadTexture(const std::string& texturePath);
 
     // Game-specific
+    void ResetMatchState();
+    Ball * GetBall();
 
 private:
     void ProcessInput();
@@ -102,4 +106,5 @@ private:
     std::vector<std::string> spritesRed;
     std::vector<Wall*> mGoals;
     std::vector<Character*> mCharacters;
+    std::unordered_map<bool, int>* mScore;
 };

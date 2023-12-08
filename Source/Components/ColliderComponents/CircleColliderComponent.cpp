@@ -7,9 +7,10 @@
 #include "../../Actors/Actor.h"
 #include "../../Game.h"
 
-CircleColliderComponent::CircleColliderComponent(class Actor* owner, const float radius, const int updateOrder)
+CircleColliderComponent::CircleColliderComponent(class Actor* owner, const float radius, const bool isBall, const int updateOrder)
         :Component(owner, updateOrder)
-        ,mRadius(radius) {
+        ,mRadius(radius)
+        ,mIsBall(isBall) {
         owner->GetGame()->AddCollider(this);
 }
 

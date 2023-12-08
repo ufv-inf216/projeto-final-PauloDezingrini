@@ -18,6 +18,7 @@ Actor::Actor(Game* game)
         , mRotation(0.0f)
         , mGame(game)
         , mIsOnGround(false)
+        , mControllable(false)
 {
     mGame->AddActor(this);
 }
@@ -88,4 +89,12 @@ void Actor::AddComponent(Component* c)
     std::sort(mComponents.begin(), mComponents.end(), [](Component* a, Component* b) {
         return a->GetUpdateOrder() < b->GetUpdateOrder();
     });
+}
+
+
+void Actor::ResetDefaultPosition()
+{
+    Vector2 pos = GetDefaultPosition();
+    SDL_Log("%f %f", pos.x, pos.y);
+    SetPosition(pos);
 }

@@ -19,11 +19,12 @@ public:
         CircleColliderComponent *target;
     };
 
-    CircleColliderComponent(class Actor* owner, float radius, int updateOrder = 10);
+    CircleColliderComponent(class Actor* owner, float radius, bool isBall = false, int updateOrder = 10);
 
     bool Contains(const Vector2& point) const;
     void SetRadius(float radius) { mRadius = radius; }
     float GetRadius() const;
+    bool GetIsBall() { return mIsBall; }
 
     const Vector2& GetCenter() const;
 
@@ -35,5 +36,6 @@ private:
     void ResolveCollisions(RigidBodyComponent *rigidBody, const Overlap& minOverlap);
     Vector2 mCenter;
     float mRadius;
+    bool mIsBall;
 };
 
