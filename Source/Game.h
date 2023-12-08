@@ -56,7 +56,7 @@ public:
     int GetWindowHeight() const { return mWindowHeight; }
 
     SDL_Texture* LoadTexture(const std::string& texturePath);
-    SDL_Texture* LoadFontTexture(const std::string& texturePath);
+    SDL_Texture* LoadFontTexture(const std::string& texturePath, const std::string& text);
 
     // Game-specific
     void ResetMatchState();

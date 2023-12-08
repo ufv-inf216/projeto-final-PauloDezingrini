@@ -6,19 +6,19 @@
 #include "../../Actors/Actor.h"
 #include "../../Game.h"
 
-DrawFontComponent::DrawFontComponent(class Actor* owner, const std::string &texturePath, const int drawOrder)
-        :DrawComponent(owner, drawOrder)
+DrawFontComponent::DrawFontComponent(class Actor* owner, const std::string &texturePath, int posX, int posY, int width, int height, std::string text, const int drawOrder)
+        :DrawComponent(owner, drawOrder), mPosX(posX), mPosY(posY), mHeight(height), mWidth(width)
 {
-    mTextureSurface = owner->GetGame()->LoadFontTexture(texturePath);
+    mTextureSurface = owner->GetGame()->LoadFontTexture(texturePath, text);
 }
 
 void DrawFontComponent::Draw(SDL_Renderer *renderer)
 {
     SDL_Rect rectangle;
-    rectangle.x = 550;
-    rectangle.y = 5;
-    rectangle.w = 400;
-    rectangle.h = 100;
+    rectangle.x = mPosX;
+    rectangle.y = mPosY;
+    rectangle.w = mWidth;
+    rectangle.h = mHeight;
 
     SDL_RenderCopy(renderer, mTextureSurface,NULL,&rectangle);
 }

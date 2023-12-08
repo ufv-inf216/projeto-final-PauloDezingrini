@@ -12,12 +12,18 @@ class DrawFontComponent: public DrawComponent {
 
     public:
         // (Lower draw order corresponds with further back)
-        DrawFontComponent(class Actor* owner, const std::string &texturePath, const int drawOrder=300);
+        DrawFontComponent(class Actor* owner, const std::string &texturePath, int posX, int posY, int width, int height, std::string value,  const int drawOrder=300);
 
         void Draw(SDL_Renderer* renderer) override;
 
     protected:
         SDL_Texture* mTextureSurface;
+
+        int mWidth;
+        int mHeight;
+        int mPosX;
+        int mPosY;
+
 
 };
 

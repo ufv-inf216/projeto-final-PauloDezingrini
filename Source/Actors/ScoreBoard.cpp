@@ -4,9 +4,10 @@
 
 #include "ScoreBoard.h"
 
-ScoreBoard::ScoreBoard(Game *game, std::string texturePath):
-        Actor(game)
+ScoreBoard::ScoreBoard(Game *game, std::string texturePath, int posX, int posY, int width, int height, std::string value):
+        Actor(game),
+        mValue(value)
 {
-    mDrawComponent = new DrawFontComponent(this, texturePath, 100);
+    mDrawComponent = new DrawFontComponent(this, texturePath, posX, posY, width, height, mValue);
 
 }

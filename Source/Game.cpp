@@ -23,8 +23,9 @@
 #include "CSV.h"
 #include "Actors/Wall.h"
 #include "GameClock.h"
-//#include "Actors/ScoreBoard.h"
+#include "Actors/ScoreBoard.h"
 #include "SDL2/SDL_ttf.h"
+#include <string>
 
 const int LEVEL_WIDTH = 213;
 const int LEVEL_HEIGHT = 14;
@@ -116,7 +117,9 @@ void Game::InitializeActors()
 
     mScore->insert(std::make_pair<bool, int>(true, 0));
     mScore->insert(std::make_pair<bool, int>(false, 0));
-    mScoreBoard = new ScoreBoard(this, "../Assets/Fonts/karma-future/KarmaFuture.ttf");
+    mScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 600, 5, 300, 100, "Brazil Strikers");
+    new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 25, 10, 150, 65, std::to_string((*mScore)[true]));
+    new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 1280, 10, 150, 65, std::to_string((*mScore)[false]));
 //    auto field = new Field(this, 1280, 860);
     //Create an array of players
 //     auto player = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", true);
@@ -335,14 +338,14 @@ SDL_Texture* Game::LoadTexture(const std::string& texturePath) {
     }
     return texture;
 }
-SDL_Texture* Game::LoadFontTexture(const std::string& texturePath){
+SDL_Texture* Game::LoadFontTexture(const std::string& texturePath, const std::string& text){
 
-    TTF_Font* ourFont = TTF_OpenFont(texturePath.c_str(), 16);
+    TTF_Font* ourFont = TTF_OpenFont(texturePath.c_str(), 200);
     if(ourFont == nullptr){
         SDL_Log("Could not load font");
         exit(1);
     }
-    SDL_Surface* surfaceText = TTF_RenderText_Solid(ourFont,"Brazil Strikers",{255,255,255});
+    SDL_Surface* surfaceText = TTF_RenderText_Solid(ourFont, text.c_str(),{255,255,255});
 
     SDL_Texture* textureText = SDL_CreateTextureFromSurface(mRenderer,surfaceText);
     SDL_FreeSurface(surfaceText);
@@ -404,7 +407,7 @@ void Game::LoadData(const std::string& fileName) {
             else if(tiles[0] == "Ball") {
                 mBall = new Ball(this, 24, 1);
                 mBall->SetPosition(Vector2(x,y));
-                mBall->SetDefaultPosition(Vector2(x, y));
+                mBall->SetDefaultPosition(mBall->GetPosition());
             } else if(tiles[0] == "HUD") {
 
             }
@@ -437,7 +440,7 @@ void Game::ResetMatchState()
     auto rigidBody = mBall->GetComponent<RigidBodyComponent>();
     rigidBody->SetVelocity(Vector2::Zero);
     rigidBody->SetAcceleration(Vector2::Zero);
-    //mBall->ResetDefaultPosition();
+    mBall->ResetDefaultPosition();
 
     //Reset position for every actor
     for (Actor * actor: mActors) {
@@ -448,6 +451,14 @@ void Game::ResetMatchState()
     for (Actor * character: mActors) {
         character->SetControllable(true);
     }
+    //mBall->ResetDefaultPosition();
+
+    //mBall = new Ball(this, 24, 1);
+
+    //auto pos = mBall->GetDefaultPosition();
+    //mBall->Kill();
+    //mBall->SetPosition(Vector2(pos));
+
 }
 
 Ball * Game::GetBall() {

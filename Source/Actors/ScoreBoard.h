@@ -7,11 +7,13 @@
 
 #include "../Components/DrawComponents/DrawFontComponent.h"
 #include "Actor.h"
+#include <string>
 class ScoreBoard: Actor {
     public:
-        explicit ScoreBoard(Game* game, std::string texturePath);
+        explicit ScoreBoard(Game* game, std::string texturePath, int posX, int posY, int width, int height, std::string value);
     private:
     DrawFontComponent* mDrawComponent;
+    std::string mValue;
 };
 
 
