@@ -72,6 +72,14 @@ public:
     void SetOnGround() { mIsOnGround = true; };
     void SetOffGround() { mIsOnGround = false; };
     bool IsOnGround() const { return mIsOnGround; };
+    void ResetDefaultPosition ();
+    void SetControllable(bool controllable) { mControllable = controllable; }
+    bool GetControllable() { return mControllable; }
+    void SetDefaultPosition(Vector2 position) { mDefaultPos = position; }
+    Vector2 GetDefaultPosition() { return mDefaultPos; };
+
+    void SetTeam(bool team) { mTeam = team; }
+    bool GetTeam() { return mTeam; }
 
     // Any actor-specific collision code (overridable)
     virtual void OnCollision(std::unordered_map<CollisionSide, AABBColliderComponent::Overlap>& responses);
@@ -98,6 +106,9 @@ protected:
 
     // Game specific
     bool mIsOnGround;
+    bool mControllable;
+    bool mTeam;
+    Vector2 mDefaultPos;
 
 private:
     friend class Component;

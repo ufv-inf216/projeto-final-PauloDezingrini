@@ -14,10 +14,10 @@ Ball::Ball(Game *game, float size, float mass):
 {
     SetPosition(Vector2(game->GetWindowWidth()/2, game->GetWindowHeight()/2));
 
-//    mColliderComponent = new CircleColliderComponent(this, size);
-    mColliderComponent = new AABBColliderComponent(this, 0, 0, size, size, ColliderLayer::Goal);
+    mColliderComponent = new CircleColliderComponent(this, size/2, true);
+//    mColliderComponent = new AABBColliderComponent(this, 0, 0, size, size, ColliderLayer::Goal);
 
-    mRigidBodyComponent = new RigidBodyComponent(this, mass);
+    mRigidBodyComponent = new RigidBodyComponent(this, mass, 1.0f);
 
     mDrawComponent = new DrawSpriteComponent(this, "../Assets/Sprites/Balls/ball1.png", size, size);
 
@@ -25,15 +25,5 @@ Ball::Ball(Game *game, float size, float mass):
 
 void Ball::OnProcessInput(const uint8_t* state)
 {
-//    if (state[SDL_SCANCODE_D]) {
-//        mRigidBodyComponent->ApplyForce(Vector2(mForwardSpeed, 0));
-//    } else if (state[SDL_SCANCODE_A]){
-//        mRigidBodyComponent->ApplyForce(Vector2(-mForwardSpeed, 0));
-//    }
-//
-//    if (state[SDL_SCANCODE_W]) {
-//        mRigidBodyComponent->ApplyForce(Vector2(0, -mForwardSpeed));
-//    } else if (state[SDL_SCANCODE_S]){
-//        mRigidBodyComponent->ApplyForce(Vector2(0, mForwardSpeed));
-//    }
+
 }

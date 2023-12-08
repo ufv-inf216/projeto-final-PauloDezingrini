@@ -2,10 +2,14 @@
 // Created by Lucas N. Ferreira on 28/09/23.
 //
 
+#ifndef AABB
+#define AABB
+
 #pragma once
 #include "../Component.h"
 #include "../../Math.h"
 #include "../RigidBodyComponent.h"
+#include "CircleColliderComponent.h"
 #include <vector>
 #include <set>
 
@@ -32,7 +36,7 @@ public:
     {
         float amount;
         CollisionSide side;
-        AABBColliderComponent *target;
+        CircleColliderComponent *target;
     };
 
     AABBColliderComponent(class Actor* owner, int dx, int dy, int w, int h,
@@ -41,6 +45,7 @@ public:
 
     bool Intersect(const AABBColliderComponent& b) const;
     void DetectCollision(RigidBodyComponent *rigidBody);
+    float MinDistSq(const Vector2& point) const;
 
     Vector2 GetMin() const;
     Vector2 GetMax() const;
@@ -48,8 +53,9 @@ public:
     ColliderLayer GetLayer() const { return mLayer; }
 
 private:
-    Overlap GetMinOverlap(AABBColliderComponent* b) const;
+    Overlap GetMinOverlap(CircleColliderComponent* b) const;
     void ResolveCollisions(RigidBodyComponent *rigidBody, const Overlap& minOverlap);
+
 
     Vector2 mOffset;
     int mWidth;
@@ -57,3 +63,5 @@ private:
 
     ColliderLayer mLayer;
 };
+
+#endif

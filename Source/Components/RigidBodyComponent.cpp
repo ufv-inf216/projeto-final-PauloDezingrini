@@ -35,6 +35,9 @@ void RigidBodyComponent::Update(float deltaTime)
     if(mVelocity.x != 0.0f) {
         ApplyForce(Vector2::UnitX * -mFrictionCoefficient * mVelocity.x);
     }
+    if(mVelocity.y != 0.0f) {
+        ApplyForce(Vector2::UnitY * -mFrictionCoefficient * mVelocity.y);
+    }
 
     // Euler Integration
     mVelocity += mAcceleration * deltaTime;
@@ -53,6 +56,10 @@ void RigidBodyComponent::Update(float deltaTime)
     auto collider = mOwner->GetComponent<AABBColliderComponent>();
     if (collider) {
         collider->DetectCollision(this);
+    }
+    auto circle = mOwner->GetComponent<CircleColliderComponent>();
+    if (circle) {
+        circle->DetectCollision(this);
     }
 
     mAcceleration.Set(0.f, 0.f);

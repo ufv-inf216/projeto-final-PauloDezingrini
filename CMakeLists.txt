@@ -46,6 +46,11 @@ add_executable(${PROJECT_NAME}
         Source/Actors/Ball.h
         Source/Actors/Characters/Character.cpp
         Source/Actors/Characters/Character.h
+        Source/Collision.cpp
+        Source/Collision.h
+        Source/Actors/Wall.cpp
+        Source/Actors/Wall.h
+        Source/Components/DrawComponents/DrawTileComponent.cpp
 )
 
 ####### DO NOT EDIT BELLOW

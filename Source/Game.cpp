@@ -16,9 +16,12 @@
 #include "Actors/Actor.h"
 #include "Actors/Spawner.h"
 #include "Components/DrawComponents/DrawComponent.h"
+#include "Components/DrawComponents/DrawTileComponent.h"
 #include "Components/ColliderComponents/AABBColliderComponent.h"
 #include "Actors/Field.h"
 #include "Actors/Characters/Character.h"
+#include "CSV.h"
+#include "Actors/Wall.h"
 
 const int LEVEL_WIDTH = 213;
 const int LEVEL_HEIGHT = 14;
@@ -34,7 +37,7 @@ Game::Game(int windowWidth, int windowHeight)
         ,mWindowWidth(windowWidth)
         ,mWindowHeight(windowHeight)
 {
-
+    mScore = new std::unordered_map<bool, int>();
 }
 
 bool Game::Initialize()
@@ -63,6 +66,15 @@ bool Game::Initialize()
 
     mTicksCount = SDL_GetTicks();
 
+    spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (1).png");
+    spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (2).png");
+    spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (3).png");
+
+    spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (1).png");
+    spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (2).png");
+    spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (3).png");
+
+
     // Init all game actors
     InitializeActors();
 
@@ -71,14 +83,31 @@ bool Game::Initialize()
 
 void Game::InitializeActors()
 {
-    auto field = new Field(this, 1280, 860);
-    mBall = new Ball(this, 32, 32);
+    mMap = new Actor(this);
+    new DrawTileComponent(mMap, "../Assets/Map/map_grass.csv", "../Assets/Map/groundGrass_mown.png", 1472, 1024, 32, 26);
+    new DrawTileComponent(mMap, "../Assets/Map/map_ground.csv", "../Assets/Map/groundGravel.png", 1472, 1024, 32, 26);
+    new DrawTileComponent(mMap, "../Assets/Map/map_elements.csv", "../Assets/Map/elements.png", 1472, 1024, 32, 18);
 
-    auto player0 = new Character(this, "Player0", "../Assets/Sprites/Characters/placeholder.png", true);
-    auto player1 = new Character(this, "Player1", "../Assets/Sprites/Characters/placeholder.png", true);
+    LoadData("../Assets/Map/Objects.csv");
 
-    player0->SetPosition(Vector2(mWindowWidth/2 - 64, mWindowHeight/2 - 64));
-    player1->SetPosition(Vector2(mWindowWidth/2 + 64, mWindowHeight/2 + 64));
+    mScore->insert(std::make_pair<bool, int>(true, 0));
+    mScore->insert(std::make_pair<bool, int>(false, 0));
+
+//    auto field = new Field(this, 1280, 860);
+    //Create an array of players
+//     auto player = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", true);
+//     auto player2 = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", false);
+
+//     player->SetDefaultPosition(Vector2(mWindowWidth/2 - 64, mWindowHeight/2 - 64));
+//     player->SetPosition(player->GetDefaultPosition());
+
+//     player2->SetDefaultPosition(Vector2(mWindowWidth/2 - 200, mWindowHeight/2 - 150));
+//     player2->SetPosition(player2->GetDefaultPosition());
+
+
+//     player->setControllable(true);
+//     player2->setControllable(true);
+//
 }
 
 void Game::LoadLevel(const std::string& levelPath, const int width, const int height)
@@ -298,6 +327,15 @@ void Game::RemoveCollider(AABBColliderComponent* collider)
     mColliders.erase(iter);
 }
 
+void Game::AddCollider(class CircleColliderComponent *collider) {
+    mCircleColliders.emplace_back(collider);
+}
+
+void Game::RemoveCollider(class CircleColliderComponent *collider) {
+    auto iter = std::find(mCircleColliders.begin(), mCircleColliders.end(), collider);
+    mCircleColliders.erase(iter);
+}
+
 void Game::GenerateOutput()
 {
     // Set draw color to black
@@ -333,6 +371,68 @@ SDL_Texture* Game::LoadTexture(const std::string& texturePath) {
     return texture;
 }
 
+void Game::LoadData(const std::string& fileName) {
+    std::ifstream file(fileName);
+    if (!file.is_open())
+    {
+        SDL_Log("Failed to load paths: %s", fileName.c_str());
+    }
+
+    int row = 0;
+
+    std::string line;
+    while (!file.eof())
+    {
+        std::getline(file, line);
+
+        if(!line.empty())
+        {
+            auto tiles = CSVHelper::Split(line);
+
+            if(tiles[0] == "Type") {
+                continue;
+            }
+
+            int x = std::stoi(tiles[1]) - 16;
+            int y = std::stoi(tiles[2]) - 16;
+            int width = std::stoi(tiles[3]);
+            int height = std::stoi(tiles[4]);
+            if(tiles[0] == "Wall") {
+                new Wall(this, x, y, width, height, ColliderLayer::Wall);
+            } else if(tiles[0] == "Goal") {
+                auto goal = new Wall(this, x, y, width, height, ColliderLayer::Goal, true);
+                goal->SetTeam(tiles[5] == "True");
+                mGoals.push_back(goal);
+            } else if(tiles[0] == "Player") {
+                if (tiles[5] == "True") {
+                    bool isPlayer = numPlayersTeam > 0;
+                    numPlayersTeam--;
+                    auto player = new Character(this, "Teste", spritesBlue.back(),  isPlayer, 48);
+                    player->SetPosition(Vector2(x, y));
+                    player->SetDefaultPosition(player->GetPosition());
+                    player->SetTeam(tiles[5] == "True");
+                    spritesBlue.pop_back();
+                } else {
+                    bool isPlayer = numPlayersTeam > 0;
+                    numPlayersTeam--;
+                    auto player = new Character(this, "Teste", spritesRed.back(), tiles[5] == "True", isPlayer, 48);
+                    player->SetPosition(Vector2(x, y));
+                    player->SetDefaultPosition(player->GetPosition());
+                    player->SetTeam(tiles[5] == "True");
+                    spritesRed.pop_back();
+                }
+            }
+            else if(tiles[0] == "Ball") {
+                mBall = new Ball(this, 24, 1);
+                mBall->SetPosition(Vector2(x,y));
+                mBall->SetDefaultPosition(Vector2(x, y));
+            } else if(tiles[0] == "HUD") {
+
+            }
+        }
+    }
+}
+
 void Game::Shutdown()
 {
     while (!mActors.empty())
@@ -343,4 +443,33 @@ void Game::Shutdown()
     SDL_DestroyRenderer(mRenderer);
     SDL_DestroyWindow(mWindow);
     SDL_Quit();
+}
+
+void Game::ResetMatchState()
+{
+    //Disable movement for every actor except for the ball
+    for (Actor * character: mActors) {
+        character->SetControllable(false);
+    }
+    //wait ~2 seconds
+    SDL_Delay(2000);
+
+    auto rigidBody = mBall->GetComponent<RigidBodyComponent>();
+    rigidBody->SetVelocity(Vector2::Zero);
+    rigidBody->SetAcceleration(Vector2::Zero);
+    mBall->ResetDefaultPosition();
+
+    //Reset position for every actor
+    for (Actor * actor: mActors) {
+        actor->ResetDefaultPosition();
+    }
+    SDL_Delay(2000);
+    //Enable movement for every player
+    for (Actor * character: mActors) {
+        character->SetControllable(true);
+    }
+}
+
+Ball * Game::GetBall() {
+    return this->mBall;
 }
