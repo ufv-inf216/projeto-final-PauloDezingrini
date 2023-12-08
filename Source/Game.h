@@ -14,6 +14,7 @@
 #include "Actors/Wall.h"
 #include "Actors/Characters/Character.h"
 #include <string>
+#include "GameClock.h"
 
 class Game
 {
@@ -58,6 +59,9 @@ public:
     // Game-specific
     void ResetMatchState();
     Ball * GetBall();
+    bool CheckMatchEnded();
+    bool ScoreReached() const;
+    void ScoreGoal(bool team);
 
 private:
     void ProcessInput();
@@ -91,7 +95,7 @@ private:
 
     // Track elapsed time since game start
     Uint32 mTicksCount;
-
+    GameClock mGameClock;
     // Track if we're updating actors right now
     bool mIsRunning;
     bool mUpdatingActors;
@@ -107,4 +111,9 @@ private:
     std::vector<Wall*> mGoals;
     std::vector<Character*> mCharacters;
     std::unordered_map<bool, int>* mScore;
+    Uint32 startTime;
+    float elapsedTimeSeconds;
+    int scoreTeamA;
+    int scoreTeamB;
+    int mScoreLimit;
 };

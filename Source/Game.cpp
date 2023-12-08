@@ -22,6 +22,7 @@
 #include "Actors/Characters/Character.h"
 #include "CSV.h"
 #include "Actors/Wall.h"
+#include "GameClock.h"
 
 const int LEVEL_WIDTH = 213;
 const int LEVEL_HEIGHT = 14;
@@ -36,6 +37,8 @@ Game::Game(int windowWidth, int windowHeight)
         ,mUpdatingActors(false)
         ,mWindowWidth(windowWidth)
         ,mWindowHeight(windowHeight)
+        ,mGameClock(1)
+        ,mScoreLimit(3)
 {
     mScore = new std::unordered_map<bool, int>();
 }
@@ -64,8 +67,12 @@ bool Game::Initialize()
 
     Random::Init();
 
+    mGameClock = GameClock(1);
     mTicksCount = SDL_GetTicks();
-
+    startTime = SDL_GetTicks();
+    //lastSecond = startTime / 1000;
+    scoreTeamA = 0;
+    scoreTeamB = 0;
     spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (1).png");
     spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (2).png");
     spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (3).png");
@@ -77,7 +84,7 @@ bool Game::Initialize()
 
     // Init all game actors
     InitializeActors();
-
+    //TTF_Init();
     return true;
 }
 
@@ -156,8 +163,19 @@ void Game::UpdateGame()
         deltaTime = 0.05f;
     }
 
-    mTicksCount = SDL_GetTicks();
+    // Update the game clock
 
+    mTicksCount = SDL_GetTicks();
+    elapsedTimeSeconds = ((float)mTicksCount - startTime) / 1000.0f;
+    startTime = mTicksCount;
+
+    mGameClock.update(elapsedTimeSeconds, mTicksCount);
+    // Check if the match is finished(by time or goals)
+    if (CheckMatchEnded()) {
+        std::cout << "The match is finished!" << std::endl;
+        //Play sound effect
+        Shutdown();
+    }
     // Update all actors and pending actors
     UpdateActors(deltaTime);
 
@@ -373,6 +391,7 @@ void Game::Shutdown()
     SDL_DestroyRenderer(mRenderer);
     SDL_DestroyWindow(mWindow);
     SDL_Quit();
+    Quit();
 }
 
 void Game::ResetMatchState()
@@ -403,3 +422,19 @@ void Game::ResetMatchState()
 Ball * Game::GetBall() {
     return this->mBall;
 }
+void Game::ScoreGoal(bool team) {
+    if (team) {
+        scoreTeamA += 1;
+        return;
+    }
+    scoreTeamB += 1;
+}
+
+bool Game::ScoreReached() const {
+    return (scoreTeamA == mScoreLimit) || (scoreTeamB == mScoreLimit);
+}
+bool Game::CheckMatchEnded() {
+
+    return mGameClock.isMatchFinished() || ScoreReached();
+}
+

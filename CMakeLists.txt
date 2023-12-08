@@ -51,6 +51,8 @@ add_executable(${PROJECT_NAME}
         Source/Actors/Wall.cpp
         Source/Actors/Wall.h
         Source/Components/DrawComponents/DrawTileComponent.cpp
+        Source/GameClock.cpp
+        Source/GameClock.h
 )
 
 ####### DO NOT EDIT BELLOW

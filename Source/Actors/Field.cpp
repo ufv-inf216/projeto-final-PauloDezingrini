@@ -169,5 +169,6 @@ void Field::HandleGoal(bool team) {
 
     SDL_Log("Gol! %b", team);
     //reset match state
+    mGame->ScoreGoal(team);
     mGame->ResetMatchState();
 }
