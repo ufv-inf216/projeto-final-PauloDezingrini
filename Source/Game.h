@@ -14,6 +14,8 @@
 #include "Actors/Wall.h"
 #include "Actors/Characters/Character.h"
 #include <string>
+#include "GameClock.h"
+#include "Actors/ScoreBoard.h"
 
 class Game
 {
@@ -54,10 +56,14 @@ public:
     int GetWindowHeight() const { return mWindowHeight; }
 
     SDL_Texture* LoadTexture(const std::string& texturePath);
+    SDL_Texture* LoadFontTexture(const std::string& texturePath, const std::string& text);
 
     // Game-specific
     void ResetMatchState();
     Ball * GetBall();
+    bool CheckMatchEnded();
+    bool ScoreReached() const;
+    void ScoreGoal(bool team);
 
 private:
 
@@ -95,7 +101,7 @@ private:
 
     // Track elapsed time since game start
     Uint32 mTicksCount;
-
+    GameClock * mGameClock;
     // Track if we're updating actors right now
     bool mIsRunning;
     bool mUpdatingActors;
@@ -112,4 +118,11 @@ private:
     std::vector<Wall*> mGoals;
     std::vector<Character*> mCharacters;
     std::unordered_map<bool, int>* mScore;
+    Uint32 startTime;
+    float elapsedTimeSeconds;
+    int mScoreLimit;
+    ScoreBoard* mScoreBoard;
+    ScoreBoard* teamAScoreBoard;
+    ScoreBoard* teamBScoreBoard;
+
 };
