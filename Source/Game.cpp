@@ -59,9 +59,14 @@ bool Game::Initialize()
         return false;
     }
 
+    mAudio = new AudioSystem();
+
     Random::Init();
 
     mTicksCount = SDL_GetTicks();
+
+    // Play background music
+    mAudio->PlaySound("Torcida.wav", true);
 
     // Init all game actors
     InitializeActors();
@@ -108,6 +113,8 @@ void Game::ProcessInput()
 
     const Uint8* state = SDL_GetKeyboardState(nullptr);
 
+    mAudio->ProcessInput(state);
+
     for (auto actor : mActors)
     {
         actor->ProcessInput(state);
@@ -123,6 +130,8 @@ void Game::UpdateGame()
     {
         deltaTime = 0.05f;
     }
+
+    mAudio->Update(deltaTime);
 
     mTicksCount = SDL_GetTicks();
 
