@@ -22,12 +22,12 @@ Character::Character(Game* game, const std::string &name, const std::string &tex
 
 void Character::OnProcessInput(const uint8_t* state)
 {
-    if (!GetControllable()) {
-        return;
-    }
+//    if (!GetControllable()) {
+//        return;
+//    }
 
+        SDL_Log("isPlayer? %d Player %s", mIsPlayer, mName.c_str());
     if (mIsPlayer) {
-
          if (state[SDL_SCANCODE_D] && this->mName == "Player0" || state[SDL_SCANCODE_RIGHT] && this->mName == "Player1") {
             mRigidBodyComponent->ApplyForce(Vector2(mForwardSpeed, 0));
         } else if (state[SDL_SCANCODE_A] && this->mName == "Player0" || state[SDL_SCANCODE_LEFT] && this->mName == "Player1"){

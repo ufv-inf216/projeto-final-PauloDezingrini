@@ -93,21 +93,21 @@ void Game::InitializeActors()
     mScore->insert(std::make_pair<bool, int>(true, 0));
     mScore->insert(std::make_pair<bool, int>(false, 0));
 
-//    auto field = new Field(this, 1280, 860);
-    //Create an array of players
+    //auto field = new Field(this, 1280, 860);
+    // Create an array of players
 //     auto player = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", true);
 //     auto player2 = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", false);
-
+//
 //     player->SetDefaultPosition(Vector2(mWindowWidth/2 - 64, mWindowHeight/2 - 64));
 //     player->SetPosition(player->GetDefaultPosition());
-
+//
 //     player2->SetDefaultPosition(Vector2(mWindowWidth/2 - 200, mWindowHeight/2 - 150));
 //     player2->SetPosition(player2->GetDefaultPosition());
-
-
+//
+//
 //     player->setControllable(true);
 //     player2->setControllable(true);
-//
+
 }
 
 void Game::LoadLevel(const std::string& levelPath, const int width, const int height)
@@ -171,8 +171,6 @@ void Game::ProcessInput()
 
         for (auto actor : mActors)
         {
-            std::cout << "Processando input" << std::endl;
-
 
             actor->ProcessInput(state);
         }
@@ -203,9 +201,8 @@ void Game::ProcessInput()
                     if (controller && event.cdevice.which == getControllerInstanceID(controller)) {
                         for (auto actor : mActors)
                         {
-                            std::cout << "Processando input" << std::endl;
 
-                            actor->ProcessInput();
+                            //actor->ProcessInput();
                         }
                     }
             }
@@ -405,17 +402,17 @@ void Game::LoadData(const std::string& fileName) {
                 mGoals.push_back(goal);
             } else if(tiles[0] == "Player") {
                 if (tiles[5] == "True") {
-                    bool isPlayer = numPlayersTeam > 0;
-                    numPlayersTeam--;
-                    auto player = new Character(this, "Teste", spritesBlue.back(),  isPlayer, 48);
+                    bool isPlayer = numPlayersTeam0 > 0;
+                    numPlayersTeam0--;
+                    auto player = new Character(this, "Player0", spritesBlue.back(),  isPlayer, 48);
                     player->SetPosition(Vector2(x, y));
                     player->SetDefaultPosition(player->GetPosition());
                     player->SetTeam(tiles[5] == "True");
                     spritesBlue.pop_back();
                 } else {
-                    bool isPlayer = numPlayersTeam > 0;
-                    numPlayersTeam--;
-                    auto player = new Character(this, "Teste", spritesRed.back(), tiles[5] == "True", isPlayer, 48);
+                    bool isPlayer = numPlayersTeam1 > 0;
+                    numPlayersTeam1--;
+                    auto player = new Character(this, "Player1", spritesRed.back(), isPlayer, 48);
                     player->SetPosition(Vector2(x, y));
                     player->SetDefaultPosition(player->GetPosition());
                     player->SetTeam(tiles[5] == "True");

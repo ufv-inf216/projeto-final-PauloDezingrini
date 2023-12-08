@@ -103,7 +103,8 @@ private:
     Vector2 mCameraPos;
 
     // Game-specific
-    int numPlayersTeam = 1;
+    int numPlayersTeam0 = 1;
+    int numPlayersTeam1 = 1;
     Ball* mBall;
     Actor* mMap;
     std::vector<std::string> spritesBlue;
