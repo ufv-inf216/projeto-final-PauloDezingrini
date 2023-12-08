@@ -15,6 +15,7 @@
 #include "Actors/Characters/Character.h"
 #include <string>
 #include "GameClock.h"
+#include "Actors/ScoreBoard.h"
 
 class Game
 {
@@ -55,6 +56,7 @@ public:
     int GetWindowHeight() const { return mWindowHeight; }
 
     SDL_Texture* LoadTexture(const std::string& texturePath);
+    SDL_Texture* LoadFontTexture(const std::string& texturePath);
 
     // Game-specific
     void ResetMatchState();
@@ -113,7 +115,7 @@ private:
     std::unordered_map<bool, int>* mScore;
     Uint32 startTime;
     float elapsedTimeSeconds;
-    int scoreTeamA;
-    int scoreTeamB;
     int mScoreLimit;
+    ScoreBoard* mScoreBoard;
+
 };

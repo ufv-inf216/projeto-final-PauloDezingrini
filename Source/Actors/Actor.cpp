@@ -95,6 +95,5 @@ void Actor::AddComponent(Component* c)
 void Actor::ResetDefaultPosition()
 {
     Vector2 pos = GetDefaultPosition();
-    SDL_Log("%f %f", pos.x, pos.y);
     SetPosition(pos);
 }

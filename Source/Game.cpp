@@ -23,6 +23,8 @@
 #include "CSV.h"
 #include "Actors/Wall.h"
 #include "GameClock.h"
+//#include "Actors/ScoreBoard.h"
+#include "SDL2/SDL_ttf.h"
 
 const int LEVEL_WIDTH = 213;
 const int LEVEL_HEIGHT = 14;
@@ -65,14 +67,32 @@ bool Game::Initialize()
         return false;
     }
 
+    if(TTF_Init() == -1){
+        SDL_Log("Could not initailize SDL2_ttf, error: %s", TTF_GetError());
+    }
+    //SDL_Renderer* renderer = nullptr;
+    //renderer = SDL_CreateRenderer(mWindow,-1,SDL_RENDERER_ACCELERATED);
+    //TTF_Font* ourFont = TTF_OpenFont("../Assets/Fonts/cubic-core-mono/CubicCoreMono.ttf",32);
+    // Confirm that it was loaded
+    //if(ourFont == nullptr){
+    //    SDL_Log("Could not load font");
+   //     exit(1);
+  //  }
+    // Pixels from our text
+    //SDL_Surface* surfaceText = TTF_RenderText_Solid(ourFont,"Brazil Strikers",{255,255,255});
+    // Setup the texture
+    //SDL_Texture* textureText = SDL_CreateTextureFromSurface(renderer,surfaceText);
+
+    // Free the surface
+    // We are done with it after we have uploaded to
+    // the texture
+    //SDL_FreeSurface(surfaceText);
     Random::Init();
 
     mGameClock = GameClock(1);
     mTicksCount = SDL_GetTicks();
     startTime = SDL_GetTicks();
-    //lastSecond = startTime / 1000;
-    scoreTeamA = 0;
-    scoreTeamB = 0;
+
     spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (1).png");
     spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (2).png");
     spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (3).png");
@@ -80,11 +100,8 @@ bool Game::Initialize()
     spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (1).png");
     spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (2).png");
     spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (3).png");
-
-
-    // Init all game actors
+    //TTF_CloseFont(ourFont);
     InitializeActors();
-    //TTF_Init();
     return true;
 }
 
@@ -99,7 +116,7 @@ void Game::InitializeActors()
 
     mScore->insert(std::make_pair<bool, int>(true, 0));
     mScore->insert(std::make_pair<bool, int>(false, 0));
-
+    mScoreBoard = new ScoreBoard(this, "../Assets/Fonts/karma-future/KarmaFuture.ttf");
 //    auto field = new Field(this, 1280, 860);
     //Create an array of players
 //     auto player = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", true);
@@ -318,6 +335,20 @@ SDL_Texture* Game::LoadTexture(const std::string& texturePath) {
     }
     return texture;
 }
+SDL_Texture* Game::LoadFontTexture(const std::string& texturePath){
+
+    TTF_Font* ourFont = TTF_OpenFont(texturePath.c_str(), 16);
+    if(ourFont == nullptr){
+        SDL_Log("Could not load font");
+        exit(1);
+    }
+    SDL_Surface* surfaceText = TTF_RenderText_Solid(ourFont,"Brazil Strikers",{255,255,255});
+
+    SDL_Texture* textureText = SDL_CreateTextureFromSurface(mRenderer,surfaceText);
+    SDL_FreeSurface(surfaceText);
+    return textureText;
+}
+
 
 void Game::LoadData(const std::string& fileName) {
     std::ifstream file(fileName);
@@ -406,7 +437,7 @@ void Game::ResetMatchState()
     auto rigidBody = mBall->GetComponent<RigidBodyComponent>();
     rigidBody->SetVelocity(Vector2::Zero);
     rigidBody->SetAcceleration(Vector2::Zero);
-    mBall->ResetDefaultPosition();
+    //mBall->ResetDefaultPosition();
 
     //Reset position for every actor
     for (Actor * actor: mActors) {
@@ -423,15 +454,14 @@ Ball * Game::GetBall() {
     return this->mBall;
 }
 void Game::ScoreGoal(bool team) {
-    if (team) {
-        scoreTeamA += 1;
-        return;
-    }
-    scoreTeamB += 1;
+
+    (*mScore)[team] += 1;
+    SDL_Log(" %i x %i", (*mScore)[true], (*mScore)[false]);
+
 }
 
 bool Game::ScoreReached() const {
-    return (scoreTeamA == mScoreLimit) || (scoreTeamB == mScoreLimit);
+    return ((*mScore)[true] == mScoreLimit) || ((*mScore)[false] == mScoreLimit);
 }
 bool Game::CheckMatchEnded() {
 
