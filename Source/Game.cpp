@@ -54,7 +54,7 @@ bool Game::Initialize()
         return false;
     }
 
-    mWindow = SDL_CreateWindow("P4: Super Mario Bros", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, mWindowWidth, mWindowHeight, 0);
+    mWindow = SDL_CreateWindow("Brazil Strikers", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, mWindowWidth, mWindowHeight, 0);
     if (!mWindow)
     {
         SDL_Log("Failed to create window: %s", SDL_GetError());
@@ -74,7 +74,7 @@ bool Game::Initialize()
 
     Random::Init();
 
-    mGameClock = new GameClock(this, 1, "../Assets/Fonts/bruder/BRUDER.ttf", 600, 5, 300, 100);
+    mGameClock = new GameClock(this, 1, "../Assets/Fonts/bruder/BRUDER.ttf", 680, 5, 100, 80);
     mTicksCount = SDL_GetTicks();
     startTime = SDL_GetTicks();
 
@@ -102,8 +102,9 @@ void Game::InitializeActors()
     mScore->insert(std::make_pair<bool, int>(true, 0));
     mScore->insert(std::make_pair<bool, int>(false, 0));
     mScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 600, 928, 300, 100, "Brazil Strikers");
-    teamAScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 25, 10, 150, 65, std::to_string((*mScore)[true]));
-    teamBScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 1280, 10, 150, 65, std::to_string((*mScore)[false]));
+    teamAScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 1280, 10, 150, 65, std::to_string((*mScore)[false]));
+    teamBScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 25, 10, 150, 65, std::to_string((*mScore)[true]));
+
 //    auto field = new Field(this, 1280, 860);
     //Create an array of players
 //     auto player = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", true);
@@ -450,9 +451,6 @@ void Game::ScoreGoal(bool team) {
         (*mScore)[team] += 1;
         teamBScoreBoard->updateValue(std::to_string((*mScore)[team]));
     }
-
-
-    SDL_Log(" %i x %i", (*mScore)[true], (*mScore)[false]);
 
 }
 

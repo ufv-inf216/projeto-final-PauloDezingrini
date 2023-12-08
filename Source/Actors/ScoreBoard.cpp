@@ -23,4 +23,5 @@ void ScoreBoard::OnUpdate(float deltaTime) {
 
 void ScoreBoard::updateValue(std::string value) {
     mValue = value;
+    mDrawComponent->ResetText(texturePath, mValue);
 }

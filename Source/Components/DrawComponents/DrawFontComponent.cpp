@@ -22,3 +22,7 @@ void DrawFontComponent::Draw(SDL_Renderer *renderer)
 
     SDL_RenderCopy(renderer, mTextureSurface,NULL,&rectangle);
 }
+
+void DrawFontComponent::ResetText(std::string texturePath, std::string text) {
+    mTextureSurface = mOwner->GetGame()->LoadFontTexture(texturePath, text);
+}

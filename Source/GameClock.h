@@ -24,6 +24,8 @@ class GameClock: public Actor {
         bool isMatchFinished() const;
         float getElapsedTime() const;
         DrawFontComponent* mDrawComponent;
+        std::string mTexturePath;
+        std::string formatTime(int seconds);
 
 };
 

@@ -106,8 +106,7 @@ void AABBColliderComponent::ResolveCollisions(RigidBodyComponent *rigidBody, con
         owner->GetGame()->ResetMatchState();
         auto score = owner->GetGame()->GetScore();
         auto it = score->find(owner->GetTeam());
-        it->second++;
-        SDL_Log("SCORE: %d X %d", score->at(true), score->at(false));
+        owner->GetGame()->ScoreGoal(it->first);
     }
 
     owner->SetPosition(pos);

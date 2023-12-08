@@ -15,9 +15,10 @@ class DrawFontComponent: public DrawComponent {
         DrawFontComponent(class Actor* owner, const std::string &texturePath, int posX, int posY, int width, int height, std::string value,  const int drawOrder=300);
 
         void Draw(SDL_Renderer* renderer) override;
-
-    protected:
         SDL_Texture* mTextureSurface;
+        void ResetText(std::string texturePath, std::string text);
+    protected:
+
 
         int mWidth;
         int mHeight;
