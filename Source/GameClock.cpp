@@ -4,7 +4,15 @@
 
 #include "GameClock.h"
 #include <SDL.h>
-GameClock::GameClock(float maxTime) : maxTime(maxTime), elapsedTimeInSeconds(0.0f) {}
+GameClock::GameClock(Game* game, float maxTime, std::string texturePath, int posX, int posY, int width, int height) :
+        Actor(game),
+        maxTime(maxTime),
+        elapsedTimeInSeconds(0.0f)
+{
+
+    mDrawComponent = new DrawFontComponent(this, texturePath, posX, posY, width, height, std::to_string(elapsedTimeInSeconds));
+
+}
 
 void GameClock::update(float deltaTime, Uint32 ticks) {
     elapsedTimeInSeconds += deltaTime;

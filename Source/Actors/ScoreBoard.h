@@ -11,10 +11,13 @@
 class ScoreBoard: Actor {
     public:
         explicit ScoreBoard(Game* game, std::string texturePath, int posX, int posY, int width, int height, std::string value);
+        void OnUpdate(float deltaTime) override;
+        void updateValue(std::string value);
     private:
     DrawFontComponent* mDrawComponent;
     std::string mValue;
+    int mPosX, mPosY, mWidth, mHeight;
+    std::string texturePath;
 };
-
 
 #endif //BRAZILSTRIKERS_SCOREBOARD_H

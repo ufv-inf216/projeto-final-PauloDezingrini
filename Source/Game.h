@@ -97,7 +97,7 @@ private:
 
     // Track elapsed time since game start
     Uint32 mTicksCount;
-    GameClock mGameClock;
+    GameClock * mGameClock;
     // Track if we're updating actors right now
     bool mIsRunning;
     bool mUpdatingActors;
@@ -117,5 +117,7 @@ private:
     float elapsedTimeSeconds;
     int mScoreLimit;
     ScoreBoard* mScoreBoard;
+    ScoreBoard* teamAScoreBoard;
+    ScoreBoard* teamBScoreBoard;
 
 };

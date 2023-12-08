@@ -8,9 +8,10 @@
 #include "Math.h"
 #pragma once
 #include <SDL.h>
-#include "Math.h"
+#include "Actors/Actor.h"
+#include "./Components/DrawComponents/DrawFontComponent.h"
 
-class GameClock {
+class GameClock: public Actor {
     private:
         // Maximum time in seconds
         float maxTime;
@@ -18,10 +19,11 @@ class GameClock {
         Uint32 lastSecond;
 
     public:
-        GameClock(float maxTime);
+        GameClock(Game* game, float maxTime, std::string texturePath, int posX, int posY, int width, int height);
         void update(float deltaTime, Uint32 ticks);
         bool isMatchFinished() const;
         float getElapsedTime() const;
+        DrawFontComponent* mDrawComponent;
 
 };
 

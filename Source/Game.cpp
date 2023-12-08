@@ -40,10 +40,10 @@ Game::Game(int windowWidth, int windowHeight)
         ,mUpdatingActors(false)
         ,mWindowWidth(windowWidth)
         ,mWindowHeight(windowHeight)
-        ,mGameClock(1)
         ,mScoreLimit(3)
 {
     mScore = new std::unordered_map<bool, int>();
+
 }
 
 bool Game::Initialize()
@@ -71,26 +71,10 @@ bool Game::Initialize()
     if(TTF_Init() == -1){
         SDL_Log("Could not initailize SDL2_ttf, error: %s", TTF_GetError());
     }
-    //SDL_Renderer* renderer = nullptr;
-    //renderer = SDL_CreateRenderer(mWindow,-1,SDL_RENDERER_ACCELERATED);
-    //TTF_Font* ourFont = TTF_OpenFont("../Assets/Fonts/cubic-core-mono/CubicCoreMono.ttf",32);
-    // Confirm that it was loaded
-    //if(ourFont == nullptr){
-    //    SDL_Log("Could not load font");
-   //     exit(1);
-  //  }
-    // Pixels from our text
-    //SDL_Surface* surfaceText = TTF_RenderText_Solid(ourFont,"Brazil Strikers",{255,255,255});
-    // Setup the texture
-    //SDL_Texture* textureText = SDL_CreateTextureFromSurface(renderer,surfaceText);
 
-    // Free the surface
-    // We are done with it after we have uploaded to
-    // the texture
-    //SDL_FreeSurface(surfaceText);
     Random::Init();
 
-    mGameClock = GameClock(1);
+    mGameClock = new GameClock(this, 1, "../Assets/Fonts/bruder/BRUDER.ttf", 600, 5, 300, 100);
     mTicksCount = SDL_GetTicks();
     startTime = SDL_GetTicks();
 
@@ -117,9 +101,9 @@ void Game::InitializeActors()
 
     mScore->insert(std::make_pair<bool, int>(true, 0));
     mScore->insert(std::make_pair<bool, int>(false, 0));
-    mScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 600, 5, 300, 100, "Brazil Strikers");
-    new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 25, 10, 150, 65, std::to_string((*mScore)[true]));
-    new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 1280, 10, 150, 65, std::to_string((*mScore)[false]));
+    mScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 600, 928, 300, 100, "Brazil Strikers");
+    teamAScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 25, 10, 150, 65, std::to_string((*mScore)[true]));
+    teamBScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 1280, 10, 150, 65, std::to_string((*mScore)[false]));
 //    auto field = new Field(this, 1280, 860);
     //Create an array of players
 //     auto player = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", true);
@@ -189,7 +173,7 @@ void Game::UpdateGame()
     elapsedTimeSeconds = ((float)mTicksCount - startTime) / 1000.0f;
     startTime = mTicksCount;
 
-    mGameClock.update(elapsedTimeSeconds, mTicksCount);
+    mGameClock->update(elapsedTimeSeconds, mTicksCount);
     // Check if the match is finished(by time or goals)
     if (CheckMatchEnded()) {
         std::cout << "The match is finished!" << std::endl;
@@ -451,13 +435,7 @@ void Game::ResetMatchState()
     for (Actor * character: mActors) {
         character->SetControllable(true);
     }
-    //mBall->ResetDefaultPosition();
 
-    //mBall = new Ball(this, 24, 1);
-
-    //auto pos = mBall->GetDefaultPosition();
-    //mBall->Kill();
-    //mBall->SetPosition(Vector2(pos));
 
 }
 
@@ -465,8 +443,15 @@ Ball * Game::GetBall() {
     return this->mBall;
 }
 void Game::ScoreGoal(bool team) {
+    if (team) {
+        (*mScore)[team] += 1;
+        teamAScoreBoard->updateValue(std::to_string((*mScore)[team]));
+    } else {
+        (*mScore)[team] += 1;
+        teamBScoreBoard->updateValue(std::to_string((*mScore)[team]));
+    }
 
-    (*mScore)[team] += 1;
+
     SDL_Log(" %i x %i", (*mScore)[true], (*mScore)[false]);
 
 }
@@ -476,6 +461,6 @@ bool Game::ScoreReached() const {
 }
 bool Game::CheckMatchEnded() {
 
-    return mGameClock.isMatchFinished() || ScoreReached();
+    return mGameClock->isMatchFinished() || ScoreReached();
 }
 
