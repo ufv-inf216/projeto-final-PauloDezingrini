@@ -62,6 +62,8 @@ bool Game::Initialize()
         return false;
     }
 
+    mAudio = new AudioSystem();
+
     Random::Init();
 
     mTicksCount = SDL_GetTicks();
@@ -74,6 +76,8 @@ bool Game::Initialize()
     spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (2).png");
     spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (3).png");
 
+    // Play background music
+    mAudio->PlaySound("Torcida.wav", true);
 
     // Init all game actors
     InitializeActors();
@@ -152,13 +156,12 @@ SDL_JoystickID Game::getControllerInstanceID(SDL_GameController *controller) {
             SDL_GameControllerGetJoystick(controller));
 }
 
-void Game::ProcessInput()
-{
-    std::vector<SDL_GameController*> controllers = findControllers();
+void Game::ProcessInput() {
+    std::vector<SDL_GameController *> controllers = findControllers();
 
     SDL_Event event;
 
-    if(controllers.empty()) { //caso nao tenha controle, processar comandos de teclado
+    if (controllers.empty()) { //caso nao tenha controle, processar comandos de teclado
         std::cout << "Nenhum controle encontrado" << std::endl;
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
@@ -167,10 +170,11 @@ void Game::ProcessInput()
                     break;
             }
         }
-        const Uint8* state = SDL_GetKeyboardState(nullptr);
+        const Uint8 *state = SDL_GetKeyboardState(nullptr);
 
-        for (auto actor : mActors)
-        {
+        mAudio->ProcessInput(state);
+
+        for (auto actor: mActors) {
 
             actor->ProcessInput(state);
         }
@@ -179,8 +183,7 @@ void Game::ProcessInput()
 
     }
 
-
-    for(auto controller : controllers) {
+    for (auto controller: controllers) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
@@ -199,8 +202,7 @@ void Game::ProcessInput()
                     break;
                 case SDL_CONTROLLERBUTTONDOWN: //caso tenha apertado um botão, chamar actor->ProcessInput()
                     if (controller && event.cdevice.which == getControllerInstanceID(controller)) {
-                        for (auto actor : mActors)
-                        {
+                        for (auto actor: mActors) {
 
                             //actor->ProcessInput();
                         }
@@ -209,8 +211,6 @@ void Game::ProcessInput()
 
         }
     }
-
-
 }
 
 void Game::UpdateGame()
@@ -222,6 +222,8 @@ void Game::UpdateGame()
     {
         deltaTime = 0.05f;
     }
+
+    mAudio->Update(deltaTime);
 
     mTicksCount = SDL_GetTicks();
 

@@ -14,6 +14,7 @@
 #include "Actors/Wall.h"
 #include "Actors/Characters/Character.h"
 #include <string>
+#include "AudioSystem.h"
 
 class Game
 {
@@ -53,6 +54,8 @@ public:
     int GetWindowWidth() const { return mWindowWidth; }
     int GetWindowHeight() const { return mWindowHeight; }
 
+    AudioSystem* GetAudio() { return mAudio; }
+
     SDL_Texture* LoadTexture(const std::string& texturePath);
 
     // Game-specific
@@ -88,6 +91,7 @@ private:
     // SDL stuff
     SDL_Window* mWindow;
     SDL_Renderer* mRenderer;
+    AudioSystem* mAudio = nullptr;
 
     // Window properties
     int mWindowWidth;
