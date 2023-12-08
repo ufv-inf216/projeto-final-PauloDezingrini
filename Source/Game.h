@@ -62,6 +62,8 @@ public:
     void ResetMatchState();
     Ball * GetBall();
 
+    void PlayKickAudio();
+
 private:
 
     SDL_GameController *findController();
@@ -116,4 +118,6 @@ private:
     std::vector<Wall*> mGoals;
     std::vector<Character*> mCharacters;
     std::unordered_map<bool, int>* mScore;
+    float audioCooldown = 0.0f;
+    const float audioCooldownTime = 0.1f; // Tempo de cooldown em segundos
 };

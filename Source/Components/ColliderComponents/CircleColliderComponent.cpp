@@ -82,8 +82,7 @@ void CircleColliderComponent::ResolveCollisions(RigidBodyComponent *rigidBody,
         pos.x += Vector2::Normalize(rigidBody->GetVelocity()).x * minOverlap.amount;
     }
 
-
-    owner->GetGame()->GetAudio()->PlaySound("Kick.wav");
+    owner->GetGame()->PlayKickAudio();
 
     owner->SetPosition(pos);
 

@@ -230,6 +230,11 @@ void Game::UpdateGame()
     // Update all actors and pending actors
     UpdateActors(deltaTime);
 
+    audioCooldown -= deltaTime;
+    if (audioCooldown < 0.0f) {
+        audioCooldown = 0.0f;
+    }
+
     // Update camera position
     UpdateCamera();
 }
@@ -471,4 +476,12 @@ void Game::ResetMatchState()
 
 Ball * Game::GetBall() {
     return this->mBall;
+}
+
+void Game::PlayKickAudio() {
+    if (audioCooldown <= 0.0f) {
+        GetAudio()->PlaySound("Kick.wav");
+        audioCooldown = audioCooldownTime; // Reiniciar o cooldown
+    }
+
 }
