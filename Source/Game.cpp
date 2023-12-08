@@ -22,6 +22,10 @@
 #include "Actors/Characters/Character.h"
 #include "CSV.h"
 #include "Actors/Wall.h"
+#include "GameClock.h"
+#include "Actors/ScoreBoard.h"
+#include "SDL2/SDL_ttf.h"
+#include <string>
 
 const int LEVEL_WIDTH = 213;
 const int LEVEL_HEIGHT = 14;
@@ -36,8 +40,10 @@ Game::Game(int windowWidth, int windowHeight)
         ,mUpdatingActors(false)
         ,mWindowWidth(windowWidth)
         ,mWindowHeight(windowHeight)
+        ,mScoreLimit(3)
 {
     mScore = new std::unordered_map<bool, int>();
+
 }
 
 bool Game::Initialize()
@@ -48,7 +54,7 @@ bool Game::Initialize()
         return false;
     }
 
-    mWindow = SDL_CreateWindow("P4: Super Mario Bros", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, mWindowWidth, mWindowHeight, 0);
+    mWindow = SDL_CreateWindow("Brazil Strikers", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, mWindowWidth, mWindowHeight, 0);
     if (!mWindow)
     {
         SDL_Log("Failed to create window: %s", SDL_GetError());
@@ -62,11 +68,19 @@ bool Game::Initialize()
         return false;
     }
 
+<<<<<<< HEAD
     mAudio = new AudioSystem();
+=======
+    if(TTF_Init() == -1){
+        SDL_Log("Could not initailize SDL2_ttf, error: %s", TTF_GetError());
+    }
+>>>>>>> 39f403c305c54aa9bfbb2aa2b89752f76d5ebde1
 
     Random::Init();
 
+    mGameClock = new GameClock(this, 1, "../Assets/Fonts/bruder/BRUDER.ttf", 680, 5, 100, 80);
     mTicksCount = SDL_GetTicks();
+    startTime = SDL_GetTicks();
 
     spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (1).png");
     spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (2).png");
@@ -75,13 +89,16 @@ bool Game::Initialize()
     spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (1).png");
     spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (2).png");
     spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (3).png");
+<<<<<<< HEAD
 
     // Play background music
     mAudio->PlaySound("Torcida.wav", true);
 
     // Init all game actors
+=======
+    //TTF_CloseFont(ourFont);
+>>>>>>> 39f403c305c54aa9bfbb2aa2b89752f76d5ebde1
     InitializeActors();
-
     return true;
 }
 
@@ -96,6 +113,9 @@ void Game::InitializeActors()
 
     mScore->insert(std::make_pair<bool, int>(true, 0));
     mScore->insert(std::make_pair<bool, int>(false, 0));
+    mScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 600, 928, 300, 100, "Brazil Strikers");
+    teamAScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 1280, 10, 150, 65, std::to_string((*mScore)[false]));
+    teamBScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 25, 10, 150, 65, std::to_string((*mScore)[true]));
 
     //auto field = new Field(this, 1280, 860);
     // Create an array of players
@@ -226,7 +246,19 @@ void Game::UpdateGame()
     mAudio->Update(deltaTime);
 
     mTicksCount = SDL_GetTicks();
+    // Update the game clock
 
+    mTicksCount = SDL_GetTicks();
+    elapsedTimeSeconds = ((float)mTicksCount - startTime) / 1000.0f;
+    startTime = mTicksCount;
+
+    mGameClock->update(elapsedTimeSeconds, mTicksCount);
+    // Check if the match is finished(by time or goals)
+    if (CheckMatchEnded()) {
+        std::cout << "The match is finished!" << std::endl;
+        //Play sound effect
+        Shutdown();
+    }
     // Update all actors and pending actors
     UpdateActors(deltaTime);
 
@@ -374,6 +406,20 @@ SDL_Texture* Game::LoadTexture(const std::string& texturePath) {
     }
     return texture;
 }
+SDL_Texture* Game::LoadFontTexture(const std::string& texturePath, const std::string& text){
+
+    TTF_Font* ourFont = TTF_OpenFont(texturePath.c_str(), 200);
+    if(ourFont == nullptr){
+        SDL_Log("Could not load font");
+        exit(1);
+    }
+    SDL_Surface* surfaceText = TTF_RenderText_Solid(ourFont, text.c_str(),{255,255,255});
+
+    SDL_Texture* textureText = SDL_CreateTextureFromSurface(mRenderer,surfaceText);
+    SDL_FreeSurface(surfaceText);
+    return textureText;
+}
+
 
 void Game::LoadData(const std::string& fileName) {
     std::ifstream file(fileName);
@@ -429,7 +475,7 @@ void Game::LoadData(const std::string& fileName) {
             else if(tiles[0] == "Ball") {
                 mBall = new Ball(this, 24, 1);
                 mBall->SetPosition(Vector2(x,y));
-                mBall->SetDefaultPosition(Vector2(x, y));
+                mBall->SetDefaultPosition(mBall->GetPosition());
             } else if(tiles[0] == "HUD") {
 
             }
@@ -447,6 +493,7 @@ void Game::Shutdown()
     SDL_DestroyRenderer(mRenderer);
     SDL_DestroyWindow(mWindow);
     SDL_Quit();
+    Quit();
 }
 
 void Game::ResetMatchState()
@@ -472,6 +519,8 @@ void Game::ResetMatchState()
     for (Actor * character: mActors) {
         character->SetControllable(true);
     }
+
+
 }
 
 Ball * Game::GetBall() {
@@ -485,3 +534,23 @@ void Game::PlayKickAudio() {
     }
 
 }
+
+void Game::ScoreGoal(bool team) {
+    if (team) {
+        (*mScore)[team] += 1;
+        teamAScoreBoard->updateValue(std::to_string((*mScore)[team]));
+    } else {
+        (*mScore)[team] += 1;
+        teamBScoreBoard->updateValue(std::to_string((*mScore)[team]));
+    }
+
+}
+
+bool Game::ScoreReached() const {
+    return ((*mScore)[true] == mScoreLimit) || ((*mScore)[false] == mScoreLimit);
+}
+bool Game::CheckMatchEnded() {
+
+    return mGameClock->isMatchFinished() || ScoreReached();
+}
+

@@ -55,6 +55,12 @@ add_executable(${PROJECT_NAME}
         Source/AudioSystem.cpp
         Source/AudioSystem.h
         Source/AudioSystem.cpp
+        Source/GameClock.cpp
+        Source/GameClock.h
+        Source/Actors/ScoreBoard.cpp
+        Source/Actors/ScoreBoard.h
+        Source/Components/DrawComponents/DrawFontComponent.cpp
+        Source/Components/DrawComponents/DrawFontComponent.h
 )
 
 ####### DO NOT EDIT BELLOW
@@ -62,5 +68,7 @@ find_package(SDL2 2.28.2 EXACT REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 
-include_directories(${SDL2_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} SDL2_image::SDL2_image SDL2_mixer::SDL2_mixer)
+find_library(SDL2TTF_LIBRARIES SDL2_ttf)
+
+include_directories(${SDL2_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIR})
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} SDL2_image::SDL2_image SDL2_mixer::SDL2_mixer ${SDL2TTF_LIBRARIES})
