@@ -66,9 +66,9 @@ add_executable(${PROJECT_NAME}
 ####### DO NOT EDIT BELLOW
 find_package(SDL2 2.28.2 EXACT REQUIRED)
 find_package(SDL2_image REQUIRED)
-find_package(SDL2_mixer REQUIRED)
-
+#find_package(SDL2_mixer REQUIRED)
+find_library(SDL2_mixer SDL2_mixer)
 find_library(SDL2TTF_LIBRARIES SDL2_ttf)
 
-include_directories(${SDL2_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIR})
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} SDL2_image::SDL2_image SDL2_mixer::SDL2_mixer ${SDL2TTF_LIBRARIES})
+include_directories(${SDL2_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} SDL2_image::SDL2_image SDL2_mixer ${SDL2TTF_LIBRARIES})

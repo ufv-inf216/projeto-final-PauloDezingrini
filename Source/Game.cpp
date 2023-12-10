@@ -68,13 +68,10 @@ bool Game::Initialize()
         return false;
     }
 
-<<<<<<< HEAD
     mAudio = new AudioSystem();
-=======
     if(TTF_Init() == -1){
         SDL_Log("Could not initailize SDL2_ttf, error: %s", TTF_GetError());
     }
->>>>>>> 39f403c305c54aa9bfbb2aa2b89752f76d5ebde1
 
     Random::Init();
 
@@ -89,15 +86,11 @@ bool Game::Initialize()
     spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (1).png");
     spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (2).png");
     spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (3).png");
-<<<<<<< HEAD
 
     // Play background music
     mAudio->PlaySound("Torcida.wav", true);
 
     // Init all game actors
-=======
-    //TTF_CloseFont(ourFont);
->>>>>>> 39f403c305c54aa9bfbb2aa2b89752f76d5ebde1
     InitializeActors();
     return true;
 }
