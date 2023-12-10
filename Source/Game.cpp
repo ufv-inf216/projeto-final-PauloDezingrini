@@ -75,7 +75,7 @@ bool Game::Initialize()
 
     Random::Init();
 
-    mGameClock = new GameClock(this, 1, "../Assets/Fonts/bruder/BRUDER.ttf", 680, 5, 100, 80);
+    mGameClock = new GameClock(this, 2, "../Assets/Fonts/bruder/BRUDER.ttf", 680, 5, 100, 80);
     mTicksCount = SDL_GetTicks();
     startTime = SDL_GetTicks();
 
