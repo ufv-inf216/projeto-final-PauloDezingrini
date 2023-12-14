@@ -10,6 +10,7 @@
 #include "../Game.h"
 #include "../Components/Component.h"
 #include <algorithm>
+#include <iostream>
 
 Actor::Actor(Game* game)
         : mState(ActorState::Active)
@@ -95,6 +96,5 @@ void Actor::AddComponent(Component* c)
 void Actor::ResetDefaultPosition()
 {
     Vector2 pos = GetDefaultPosition();
-    SDL_Log("%f %f", pos.x, pos.y);
     SetPosition(pos);
 }

@@ -22,6 +22,10 @@
 #include "Actors/Characters/Character.h"
 #include "CSV.h"
 #include "Actors/Wall.h"
+#include "GameClock.h"
+#include "Actors/ScoreBoard.h"
+#include "SDL_ttf.h"
+#include <string>
 
 const int LEVEL_WIDTH = 213;
 const int LEVEL_HEIGHT = 14;
@@ -36,8 +40,10 @@ Game::Game(int windowWidth, int windowHeight)
         ,mUpdatingActors(false)
         ,mWindowWidth(windowWidth)
         ,mWindowHeight(windowHeight)
+        ,mScoreLimit(3)
 {
     mScore = new std::unordered_map<bool, int>();
+
 }
 
 bool Game::Initialize()
@@ -48,7 +54,7 @@ bool Game::Initialize()
         return false;
     }
 
-    mWindow = SDL_CreateWindow("P4: Super Mario Bros", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, mWindowWidth, mWindowHeight, 0);
+    mWindow = SDL_CreateWindow("Brazil Strikers", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, mWindowWidth, mWindowHeight, 0);
     if (!mWindow)
     {
         SDL_Log("Failed to create window: %s", SDL_GetError());
@@ -62,9 +68,16 @@ bool Game::Initialize()
         return false;
     }
 
+    mAudio = new AudioSystem();
+    if(TTF_Init() == -1){
+        SDL_Log("Could not initailize SDL2_ttf, error: %s", TTF_GetError());
+    }
+
     Random::Init();
 
+    mGameClock = new GameClock(this, 2, "../Assets/Fonts/bruder/BRUDER.ttf", 680, 5, 100, 80);
     mTicksCount = SDL_GetTicks();
+    startTime = SDL_GetTicks();
 
     spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (1).png");
     spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (2).png");
@@ -74,10 +87,11 @@ bool Game::Initialize()
     spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (2).png");
     spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (3).png");
 
+    // Play background music
+    mAudio->PlaySound("Torcida.wav", true);
 
     // Init all game actors
     InitializeActors();
-
     return true;
 }
 
@@ -92,22 +106,25 @@ void Game::InitializeActors()
 
     mScore->insert(std::make_pair<bool, int>(true, 0));
     mScore->insert(std::make_pair<bool, int>(false, 0));
+    mScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 600, 928, 300, 100, "Brazil Strikers");
+    teamAScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 1280, 10, 150, 65, std::to_string((*mScore)[false]));
+    teamBScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 25, 10, 150, 65, std::to_string((*mScore)[true]));
 
-//    auto field = new Field(this, 1280, 860);
-    //Create an array of players
+    //auto field = new Field(this, 1280, 860);
+    // Create an array of players
 //     auto player = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", true);
 //     auto player2 = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", false);
-
+//
 //     player->SetDefaultPosition(Vector2(mWindowWidth/2 - 64, mWindowHeight/2 - 64));
 //     player->SetPosition(player->GetDefaultPosition());
-
+//
 //     player2->SetDefaultPosition(Vector2(mWindowWidth/2 - 200, mWindowHeight/2 - 150));
 //     player2->SetPosition(player2->GetDefaultPosition());
-
-
+//
+//
 //     player->setControllable(true);
 //     player2->setControllable(true);
-//
+
 }
 
 void Game::LoadLevel(const std::string& levelPath, const int width, const int height)
@@ -125,24 +142,87 @@ void Game::RunLoop()
     }
 }
 
-void Game::ProcessInput()
-{
-    SDL_Event event;
-    while (SDL_PollEvent(&event))
-    {
-        switch (event.type)
-        {
-            case SDL_QUIT:
-                Quit();
-                break;
+SDL_GameController *Game::findController() {
+    for (int i = 0; i < SDL_NumJoysticks(); i++) {
+        if (SDL_IsGameController(i)) {
+            return SDL_GameControllerOpen(i);
         }
     }
 
-    const Uint8* state = SDL_GetKeyboardState(nullptr);
+    return nullptr;
+}
 
-    for (auto actor : mActors)
-    {
-        actor->ProcessInput(state);
+std::vector<SDL_GameController*> Game::findControllers() {
+    std::vector<SDL_GameController*> controllers;
+
+    for (int i = 0; i < SDL_NumJoysticks(); i++) {
+        if (SDL_IsGameController(i)) {
+            controllers.push_back(SDL_GameControllerOpen(i));
+        }
+    }
+
+    return controllers;
+}
+
+SDL_JoystickID Game::getControllerInstanceID(SDL_GameController *controller) {
+    return SDL_JoystickInstanceID(
+            SDL_GameControllerGetJoystick(controller));
+}
+
+void Game::ProcessInput() {
+    std::vector<SDL_GameController *> controllers = findControllers();
+
+    SDL_Event event;
+
+    if (controllers.empty()) { //caso nao tenha controle, processar comandos de teclado
+        std::cout << "Nenhum controle encontrado" << std::endl;
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_QUIT:
+                    Quit();
+                    break;
+            }
+        }
+        const Uint8 *state = SDL_GetKeyboardState(nullptr);
+
+        mAudio->ProcessInput(state);
+
+        for (auto actor: mActors) {
+
+            actor->ProcessInput(state);
+        }
+
+        return;
+
+    }
+
+    for (auto controller: controllers) {
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_QUIT:
+                    Quit();
+                    break;
+                case SDL_CONTROLLERDEVICEADDED:
+                    if (!controller) {
+                        controller = SDL_GameControllerOpen(event.cdevice.which);
+                    }
+                    break;
+                case SDL_CONTROLLERDEVICEREMOVED:
+                    if (controller && event.cdevice.which == getControllerInstanceID(controller)) {
+                        SDL_GameControllerClose(controller);
+                        controller = findController();
+                    }
+                    break;
+                case SDL_CONTROLLERBUTTONDOWN: //caso tenha apertado um botão, chamar actor->ProcessInput()
+                    if (controller && event.cdevice.which == getControllerInstanceID(controller)) {
+                        for (auto actor: mActors) {
+
+                            //actor->ProcessInput();
+                        }
+                    }
+            }
+
+        }
     }
 }
 
@@ -156,10 +236,29 @@ void Game::UpdateGame()
         deltaTime = 0.05f;
     }
 
-    mTicksCount = SDL_GetTicks();
+    mAudio->Update(deltaTime);
 
+    mTicksCount = SDL_GetTicks();
+    // Update the game clock
+
+    mTicksCount = SDL_GetTicks();
+    elapsedTimeSeconds = ((float)mTicksCount - startTime) / 1000.0f;
+    startTime = mTicksCount;
+
+    mGameClock->update(elapsedTimeSeconds, mTicksCount);
+    // Check if the match is finished(by time or goals)
+    if (CheckMatchEnded()) {
+        std::cout << "The match is finished!" << std::endl;
+        //Play sound effect
+        Shutdown();
+    }
     // Update all actors and pending actors
     UpdateActors(deltaTime);
+
+    audioCooldown -= deltaTime;
+    if (audioCooldown < 0.0f) {
+        audioCooldown = 0.0f;
+    }
 
     // Update camera position
     UpdateCamera();
@@ -300,6 +399,20 @@ SDL_Texture* Game::LoadTexture(const std::string& texturePath) {
     }
     return texture;
 }
+SDL_Texture* Game::LoadFontTexture(const std::string& texturePath, const std::string& text){
+
+    TTF_Font* ourFont = TTF_OpenFont(texturePath.c_str(), 200);
+    if(ourFont == nullptr){
+        SDL_Log("Could not load font");
+        exit(1);
+    }
+    SDL_Surface* surfaceText = TTF_RenderText_Solid(ourFont, text.c_str(),{255,255,255});
+
+    SDL_Texture* textureText = SDL_CreateTextureFromSurface(mRenderer,surfaceText);
+    SDL_FreeSurface(surfaceText);
+    return textureText;
+}
+
 
 void Game::LoadData(const std::string& fileName) {
     std::ifstream file(fileName);
@@ -335,17 +448,17 @@ void Game::LoadData(const std::string& fileName) {
                 mGoals.push_back(goal);
             } else if(tiles[0] == "Player") {
                 if (tiles[5] == "True") {
-                    bool isPlayer = numPlayersTeam > 0;
-                    numPlayersTeam--;
-                    auto player = new Character(this, "Teste", spritesBlue.back(),  isPlayer, 48);
+                    bool isPlayer = numPlayersTeam0 > 0;
+                    numPlayersTeam0--;
+                    auto player = new Character(this, "Player0", spritesBlue.back(),  isPlayer, 48);
                     player->SetPosition(Vector2(x, y));
                     player->SetDefaultPosition(player->GetPosition());
                     player->SetTeam(tiles[5] == "True");
                     spritesBlue.pop_back();
                 } else {
-                    bool isPlayer = numPlayersTeam > 0;
-                    numPlayersTeam--;
-                    auto player = new Character(this, "Teste", spritesRed.back(), tiles[5] == "True", isPlayer, 48);
+                    bool isPlayer = numPlayersTeam1 > 0;
+                    numPlayersTeam1--;
+                    auto player = new Character(this, "Player1", spritesRed.back(), isPlayer, 48);
                     player->SetPosition(Vector2(x, y));
                     player->SetDefaultPosition(player->GetPosition());
                     player->SetTeam(tiles[5] == "True");
@@ -356,7 +469,7 @@ void Game::LoadData(const std::string& fileName) {
                 mBall = new Ball(this, 24, 1);
                 mBall->SetPosition(Vector2(x,y));
                 mBall->SetDefaultPosition(Vector2(x, y));
-                mBallPos = Vector2(x,y);
+                mBall->SetDefaultPosition(mBall->GetPosition());
             } else if(tiles[0] == "HUD") {
 
             }
@@ -374,6 +487,7 @@ void Game::Shutdown()
     SDL_DestroyRenderer(mRenderer);
     SDL_DestroyWindow(mWindow);
     SDL_Quit();
+    Quit();
 }
 
 void Game::ResetMatchState()
@@ -394,8 +508,38 @@ void Game::ResetMatchState()
     for (Actor * character: mActors) {
         character->SetControllable(true);
     }
+
+
 }
 
 Ball * Game::GetBall() {
     return this->mBall;
 }
+
+void Game::PlayKickAudio() {
+    if (audioCooldown <= 0.0f) {
+        GetAudio()->PlaySound("Kick.wav");
+        audioCooldown = audioCooldownTime; // Reiniciar o cooldown
+    }
+
+}
+
+void Game::ScoreGoal(bool team) {
+    if (team) {
+        (*mScore)[team] += 1;
+        teamAScoreBoard->updateValue(std::to_string((*mScore)[team]));
+    } else {
+        (*mScore)[team] += 1;
+        teamBScoreBoard->updateValue(std::to_string((*mScore)[team]));
+    }
+
+}
+
+bool Game::ScoreReached() const {
+    return ((*mScore)[true] == mScoreLimit) || ((*mScore)[false] == mScoreLimit);
+}
+bool Game::CheckMatchEnded() {
+
+    return mGameClock->isMatchFinished() || ScoreReached();
+}
+
