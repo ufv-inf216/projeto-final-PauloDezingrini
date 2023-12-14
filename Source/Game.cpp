@@ -356,6 +356,7 @@ void Game::LoadData(const std::string& fileName) {
                 mBall = new Ball(this, 24, 1);
                 mBall->SetPosition(Vector2(x,y));
                 mBall->SetDefaultPosition(Vector2(x, y));
+                mBallPos = Vector2(x,y);
             } else if(tiles[0] == "HUD") {
 
             }
@@ -383,11 +384,6 @@ void Game::ResetMatchState()
     }
     //wait ~2 seconds
     SDL_Delay(2000);
-
-    auto rigidBody = mBall->GetComponent<RigidBodyComponent>();
-    rigidBody->SetVelocity(Vector2::Zero);
-    rigidBody->SetAcceleration(Vector2::Zero);
-    mBall->ResetDefaultPosition();
 
     //Reset position for every actor
     for (Actor * actor: mActors) {
