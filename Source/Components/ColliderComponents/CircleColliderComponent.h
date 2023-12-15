@@ -19,7 +19,7 @@ public:
         CircleColliderComponent *target;
     };
 
-    CircleColliderComponent(class Actor* owner, float radius, bool isBall = false, int updateOrder = 10);
+    CircleColliderComponent(class Actor* owner, float radius, bool isBall = false, bool draw = false, int updateOrder = 10);
 
     bool Contains(const Vector2& point) const;
     void SetRadius(float radius) { mRadius = radius; }

@@ -25,4 +25,6 @@ public:
 protected:
     bool mIsVisible;
     int mDrawOrder;
+
+    void DrawCircle(SDL_Renderer *renderer, const Vector2 &center, const float radius, const int numVertices);
 };

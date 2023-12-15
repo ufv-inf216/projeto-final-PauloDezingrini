@@ -6,12 +6,17 @@
 #include "CircleColliderComponent.h"
 #include "../../Actors/Actor.h"
 #include "../../Game.h"
+#include "../DrawComponents/DrawPolygonComponent.h"
 
-CircleColliderComponent::CircleColliderComponent(class Actor* owner, const float radius, const bool isBall, const int updateOrder)
+CircleColliderComponent::CircleColliderComponent(class Actor* owner, const float radius, const bool isBall, const bool draw, const int updateOrder)
         :Component(owner, updateOrder)
         ,mRadius(radius)
         ,mIsBall(isBall) {
         owner->GetGame()->AddCollider(this);
+
+        if (draw) {
+            new DrawPolygonComponent(owner, radius, 20);
+        }
 }
 
 const Vector2& CircleColliderComponent::GetCenter() const

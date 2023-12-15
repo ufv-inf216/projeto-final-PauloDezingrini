@@ -24,7 +24,7 @@
 #include "Actors/Wall.h"
 #include "GameClock.h"
 #include "Actors/ScoreBoard.h"
-#include "SDL2/SDL_ttf.h"
+#include "SDL_ttf.h"
 #include <string>
 
 const int LEVEL_WIDTH = 213;
@@ -81,11 +81,11 @@ bool Game::Initialize()
 
     spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (1).png");
     spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (2).png");
-    spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (3).png");
+    spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (10).png");
 
     spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (1).png");
     spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (2).png");
-    spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (3).png");
+    spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (10).png");
 
     // Play background music
     mAudio->PlaySound("Torcida.wav", true);
@@ -109,21 +109,6 @@ void Game::InitializeActors()
     mScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 600, 928, 300, 100, "Brazil Strikers");
     teamAScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 1280, 10, 150, 65, std::to_string((*mScore)[false]));
     teamBScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 25, 10, 150, 65, std::to_string((*mScore)[true]));
-
-    //auto field = new Field(this, 1280, 860);
-    // Create an array of players
-//     auto player = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", true);
-//     auto player2 = new Character(this, "Teste", "../Assets/Sprites/Characters/placeholder.png", false);
-//
-//     player->SetDefaultPosition(Vector2(mWindowWidth/2 - 64, mWindowHeight/2 - 64));
-//     player->SetPosition(player->GetDefaultPosition());
-//
-//     player2->SetDefaultPosition(Vector2(mWindowWidth/2 - 200, mWindowHeight/2 - 150));
-//     player2->SetPosition(player2->GetDefaultPosition());
-//
-//
-//     player->setControllable(true);
-//     player2->setControllable(true);
 
 }
 
@@ -175,7 +160,7 @@ void Game::ProcessInput() {
     SDL_Event event;
 
     if (controllers.empty()) { //caso nao tenha controle, processar comandos de teclado
-        std::cout << "Nenhum controle encontrado" << std::endl;
+//        std::cout << "Nenhum controle encontrado" << std::endl;
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
@@ -450,7 +435,7 @@ void Game::LoadData(const std::string& fileName) {
                 if (tiles[5] == "True") {
                     bool isPlayer = numPlayersTeam0 > 0;
                     numPlayersTeam0--;
-                    auto player = new Character(this, "Player0", spritesBlue.back(),  isPlayer, 48);
+                    auto player = new Character(this, "Player0", spritesBlue.back(),  isPlayer, 48, 750);
                     player->SetPosition(Vector2(x, y));
                     player->SetDefaultPosition(player->GetPosition());
                     player->SetTeam(tiles[5] == "True");
