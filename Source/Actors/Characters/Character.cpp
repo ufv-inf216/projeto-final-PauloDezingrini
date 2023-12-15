@@ -8,8 +8,8 @@
 #include "States/ChaseState.h"
 #include "States/PositionState.h"
 
-Character::Character(Game* game, const std::string &name, const std::string &texturePath, bool isPlayer, float size, float forwardSpeed, bool isGoalkeeper, float mass)
-        :Actor(game)
+Character::Character(Scene* scene, const std::string &name, const std::string &texturePath, bool isPlayer, float size, float forwardSpeed, float mass)
+        :Actor(scene)
         ,mName(name)
         ,mForwardSpeed(forwardSpeed)
         ,mSize(size)

@@ -22,6 +22,20 @@
 class Game
 {
 public:
+    const float SCENE_TRANSITION_TIME = 0.25f;
+
+    enum class GameScene
+    {
+        Menu,
+        Match
+    };
+
+    enum class FadeState
+    {
+        FadeIn,
+        FadeOut,
+        None
+    };
     Game(int windowWidth, int windowHeight);
 
     bool Initialize();
@@ -51,8 +65,6 @@ public:
     Vector2& GetCameraPos() { return mCameraPos; };
     void SetCameraPos(const Vector2& position) { mCameraPos = position; };
 
-    std::unordered_map<bool, int>* GetScore() { return mScore; }
-
     // Window functions
     int GetWindowWidth() const { return mWindowWidth; }
     int GetWindowHeight() const { return mWindowHeight; }
@@ -63,15 +75,20 @@ public:
 
     SDL_Texture* LoadTexture(const std::string& texturePath);
     SDL_Texture* LoadFontTexture(const std::string& texturePath, const std::string& text);
-
+    std::unordered_map<bool, int>* GetScore();
     // Game-specific
-    void ResetMatchState();
+    /*void ResetMatchState();
     Ball * GetBall();
     bool CheckMatchEnded();
     bool ScoreReached() const;
-    void ScoreGoal(bool team);
+    void ScoreGoal(bool team);*/
 
     void PlayKickAudio();
+
+    void SetScene(GameScene gameState);
+    class Scene *mScene;
+    std::vector<class Actor*> mActors;
+    void UnloadActors();
 
 private:
 
@@ -89,7 +106,7 @@ private:
 
 
     // All the actors in the game
-    std::vector<class Actor*> mActors;
+    //std::vector<class Actor*> mActors;
     std::vector<class Actor*> mPendingActors;
 
     // All the draw components
@@ -110,7 +127,7 @@ private:
 
     // Track elapsed time since game start
     Uint32 mTicksCount;
-    GameClock * mGameClock;
+//    GameClock * mGameClock;
     // Track if we're updating actors right now
     bool mIsRunning;
     bool mUpdatingActors;
@@ -118,14 +135,16 @@ private:
     Vector2 mCameraPos;
 
     // Game-specific
-    int numPlayersTeam0 = 1;
-    int numPlayersTeam1 = 1;
-    Ball* mBall;
-    Actor* mMap;
-    std::vector<std::string> spritesBlue;
-    std::vector<std::string> spritesRed;
-    std::vector<Wall*> mGoals;
-    std::vector<Character*> mCharacters;
+    //int numPlayersTeam0 = 1;
+    //int numPlayersTeam1 = 1;
+    //Ball* mBall;
+    //Actor* mMap;
+    //std::vector<std::string> spritesBlue;
+    //std::vector<std::string> spritesRed;
+    //std::vector<Wall*> mGoals;
+    //std::vector<Character*> mCharacters;
+    //std::unordered_map<bool, int>* mScore;
+
     std::unordered_map<bool, int>* mScore;
 
     float audioCooldown = 0.0f;
@@ -133,9 +152,15 @@ private:
 
     Uint32 startTime;
     float elapsedTimeSeconds;
-    int mScoreLimit;
-    ScoreBoard* mScoreBoard;
-    ScoreBoard* teamAScoreBoard;
-    ScoreBoard* teamBScoreBoard;
+    // int mScoreLimit;
+    //ScoreBoard* mScoreBoard;
+    //ScoreBoard* teamAScoreBoard;
+    //ScoreBoard* teamBScoreBoard;
 
+    // Scene transition effect
+    FadeState mFadeState;
+    float mSceneTransitionTime;
+
+    GameScene mGameState;
+    //class Scene *mScene;
 };

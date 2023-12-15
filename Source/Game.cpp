@@ -24,7 +24,13 @@
 #include "Actors/Wall.h"
 #include "GameClock.h"
 #include "Actors/ScoreBoard.h"
+<<<<<<< HEAD
 #include "SDL_ttf.h"
+=======
+#include "SDL2/SDL_ttf.h"
+#include "Scenes/Menu.h"
+#include "Scenes/Match.h"
+>>>>>>> b34fc25eee42721d54a287a261b3961359180f92
 #include <string>
 
 const int LEVEL_WIDTH = 213;
@@ -38,9 +44,11 @@ Game::Game(int windowWidth, int windowHeight)
         ,mTicksCount(0)
         ,mIsRunning(true)
         ,mUpdatingActors(false)
+        ,mFadeState(FadeState::None)
+        ,mSceneTransitionTime(0.0f)
         ,mWindowWidth(windowWidth)
         ,mWindowHeight(windowHeight)
-        ,mScoreLimit(3)
+        ,mGameState(GameScene::Menu)
 {
     mScore = new std::unordered_map<bool, int>();
 
@@ -75,17 +83,9 @@ bool Game::Initialize()
 
     Random::Init();
 
-    mGameClock = new GameClock(this, 2, "../Assets/Fonts/bruder/BRUDER.ttf", 680, 5, 100, 80);
+    //mGameClock = new GameClock(this, 2, "../Assets/Fonts/bruder/BRUDER.ttf", 680, 5, 100, 80);
     mTicksCount = SDL_GetTicks();
     startTime = SDL_GetTicks();
-
-    spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (1).png");
-    spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (2).png");
-    spritesRed.push_back("../Assets/Sprites/Characters/Red/characterRed (10).png");
-
-    spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (1).png");
-    spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (2).png");
-    spritesBlue.push_back("../Assets/Sprites/Characters/Blue/characterBlue (10).png");
 
     // Play background music
     mAudio->PlaySound("Torcida.wav", true);
@@ -97,7 +97,22 @@ bool Game::Initialize()
 
 void Game::InitializeActors()
 {
-    mMap = new Actor(this);
+    switch (mGameState)
+    {
+        case GameScene::Menu:
+            mScene = new Menu(this);
+            mScene->Load();
+            break;
+
+        case GameScene::Match:
+          mScene = new Match(this);
+          mScene->Load();
+          break;
+        default:
+            break;
+    }
+    /////////////////////////////////////////////////////////
+    /*mMap = new Actor(this);
     new DrawTileComponent(mMap, "../Assets/Map/map_grass.csv", "../Assets/Map/groundGrass_mown.png", 1472, 1024, 32, 26);
     new DrawTileComponent(mMap, "../Assets/Map/map_ground.csv", "../Assets/Map/groundGravel.png", 1472, 1024, 32, 26);
     new DrawTileComponent(mMap, "../Assets/Map/map_elements.csv", "../Assets/Map/elements.png", 1472, 1024, 32, 18);
@@ -109,10 +124,24 @@ void Game::InitializeActors()
     mScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 600, 928, 300, 100, "Brazil Strikers");
     teamAScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 1280, 10, 150, 65, std::to_string((*mScore)[false]));
     teamBScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 25, 10, 150, 65, std::to_string((*mScore)[true]));
+<<<<<<< HEAD
 
     mAudio->PlaySound("SoundTrack.mp3");
+=======
+*/
+>>>>>>> b34fc25eee42721d54a287a261b3961359180f92
 }
+void Game::SetScene(GameScene gameState)
+{
+    // Stop all sounds
+    mAudio->StopAllSounds();
+    mFadeState = FadeState::FadeOut;
 
+    // Handle scene transition
+    mGameState = gameState;
+    //UnloadActors();
+    //InitializeActors();
+}
 void Game::LoadLevel(const std::string& levelPath, const int width, const int height)
 {
 
@@ -161,7 +190,10 @@ void Game::ProcessInput() {
     SDL_Event event;
 
     if (controllers.empty()) { //caso nao tenha controle, processar comandos de teclado
+<<<<<<< HEAD
 //        std::cout << "Nenhum controle encontrado" << std::endl;
+=======
+>>>>>>> b34fc25eee42721d54a287a261b3961359180f92
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
@@ -177,11 +209,10 @@ void Game::ProcessInput() {
 
             actor->ProcessInput(state);
         }
-
+        mScene->ProcessInput(state);
         return;
 
     }
-
     for (auto controller: controllers) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
@@ -231,13 +262,14 @@ void Game::UpdateGame()
     elapsedTimeSeconds = ((float)mTicksCount - startTime) / 1000.0f;
     startTime = mTicksCount;
 
-    mGameClock->update(elapsedTimeSeconds, mTicksCount);
+    //mGameClock->update(elapsedTimeSeconds, mTicksCount);
+    mScene->Update(deltaTime, elapsedTimeSeconds);
     // Check if the match is finished(by time or goals)
-    if (CheckMatchEnded()) {
+    /*if (mScene->CheckMatchEnded()) {
         std::cout << "The match is finished!" << std::endl;
         //Play sound effect
         Shutdown();
-    }
+    }*/
     // Update all actors and pending actors
     UpdateActors(deltaTime);
 
@@ -248,6 +280,27 @@ void Game::UpdateGame()
 
     // Update camera position
     UpdateCamera();
+    if (mFadeState == FadeState::FadeOut)
+    {
+        mSceneTransitionTime += deltaTime;
+        if (mSceneTransitionTime >= SCENE_TRANSITION_TIME)
+        {
+            mSceneTransitionTime = 0.0f;
+            mFadeState = FadeState::FadeIn;
+
+            UnloadActors();
+            InitializeActors();
+        }
+    }
+    else if (mFadeState == FadeState::FadeIn)
+    {
+        mSceneTransitionTime += deltaTime;
+        if (mSceneTransitionTime >= SCENE_TRANSITION_TIME)
+        {
+            mFadeState = FadeState::None;
+            mSceneTransitionTime = 0.0f;
+        }
+    }
 }
 
 void Game::UpdateCamera()
@@ -367,6 +420,19 @@ void Game::GenerateOutput()
         }
     }
 
+    // Apply fade effect if changing scene
+    if (mFadeState == FadeState::FadeOut)
+    {
+        SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
+        SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, static_cast<Uint8>(255 * mSceneTransitionTime/SCENE_TRANSITION_TIME));
+        SDL_RenderFillRect(mRenderer, nullptr);
+    }
+    else if (mFadeState == FadeState::FadeIn)
+    {
+        SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
+        SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, static_cast<Uint8>(255 * (1.0f - mSceneTransitionTime/SCENE_TRANSITION_TIME)));
+        SDL_RenderFillRect(mRenderer, nullptr);
+    }
     // Swap front buffer and back buffer
     SDL_RenderPresent(mRenderer);
 }
@@ -401,12 +467,8 @@ SDL_Texture* Game::LoadFontTexture(const std::string& texturePath, const std::st
 
 
 void Game::LoadData(const std::string& fileName) {
-    std::ifstream file(fileName);
-    if (!file.is_open())
-    {
-        SDL_Log("Failed to load paths: %s", fileName.c_str());
-    }
 
+<<<<<<< HEAD
     int row = 0;
 
     std::string line;
@@ -461,52 +523,28 @@ void Game::LoadData(const std::string& fileName) {
             }
         }
     }
+=======
+>>>>>>> b34fc25eee42721d54a287a261b3961359180f92
 }
-
-void Game::Shutdown()
+void Game::UnloadActors()
 {
     while (!mActors.empty())
     {
         delete mActors.back();
     }
 
+    delete mScene;
+}
+
+void Game::Shutdown()
+{
+    UnloadActors();
+
     SDL_DestroyRenderer(mRenderer);
     SDL_DestroyWindow(mWindow);
     SDL_Quit();
     Quit();
 }
-
-void Game::ResetMatchState()
-{
-    //Disable movement for every actor except for the ball
-    for (Actor * character: mActors) {
-        character->SetControllable(false);
-    }
-    //wait ~2 seconds
-    SDL_Delay(2000);
-
-    auto rigidBody = mBall->GetComponent<RigidBodyComponent>();
-    rigidBody->SetVelocity(Vector2::Zero);
-    rigidBody->SetAcceleration(Vector2::Zero);
-    mBall->ResetDefaultPosition();
-
-    //Reset position for every actor
-    for (Actor * actor: mActors) {
-        actor->ResetDefaultPosition();
-    }
-    SDL_Delay(2000);
-    //Enable movement for every player
-    for (Actor * character: mActors) {
-        character->SetControllable(true);
-    }
-
-
-}
-
-Ball * Game::GetBall() {
-    return this->mBall;
-}
-
 void Game::PlayKickAudio() {
     if (audioCooldown <= 0.0f) {
         GetAudio()->PlaySound("Kick.wav");
@@ -514,23 +552,3 @@ void Game::PlayKickAudio() {
     }
 
 }
-
-void Game::ScoreGoal(bool team) {
-    if (team) {
-        (*mScore)[team] += 1;
-        teamAScoreBoard->updateValue(std::to_string((*mScore)[team]));
-    } else {
-        (*mScore)[team] += 1;
-        teamBScoreBoard->updateValue(std::to_string((*mScore)[team]));
-    }
-
-}
-
-bool Game::ScoreReached() const {
-    return ((*mScore)[true] == mScoreLimit) || ((*mScore)[false] == mScoreLimit);
-}
-bool Game::CheckMatchEnded() {
-
-    return mGameClock->isMatchFinished() || ScoreReached();
-}
-

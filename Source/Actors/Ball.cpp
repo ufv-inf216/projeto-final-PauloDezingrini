@@ -3,16 +3,17 @@
 //
 
 #include "Ball.h"
+#include "Actor.h"
 #include <vector>
 #include "../Game.h"
 #include "../Components/DrawComponents/DrawPolygonComponent.h"
 
 
-Ball::Ball(Game *game, float size, float mass):
-    Actor(game),
+Ball::Ball(Scene *scene, float size, float mass):
+    Actor(scene),
     mSize(size)
 {
-    SetPosition(Vector2(game->GetWindowWidth()/2, game->GetWindowHeight()/2));
+    SetPosition(Vector2(scene->GetGame()->GetWindowWidth()/2, scene->GetGame()->GetWindowHeight()/2));
 
     mColliderComponent = new CircleColliderComponent(this, size/2, true);
 //    mColliderComponent = new AABBColliderComponent(this, 0, 0, size, size, ColliderLayer::Goal);

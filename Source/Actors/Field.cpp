@@ -8,14 +8,14 @@
 #include "../Components/DrawComponents/DrawPolygonComponent.h"
 #include "Wall.h"
 
-Field::Field(Game *mGame, float width, float length)
-        :Actor(mGame)
+Field::Field(Scene *scene, float width, float length)
+        :Actor(scene)
         ,mWidth(width)
         ,mLength(length)
 {
     Vector2 fieldPos;
-    fieldPos.x = (mGame->GetWindowWidth() - width)/2;
-    fieldPos.y = (mGame->GetWindowHeight() - length)/2;
+    fieldPos.x = (scene->GetGame()->GetWindowWidth() - width)/2;
+    fieldPos.y = (scene->GetGame()->GetWindowHeight() - length)/2;
 
     SetPosition(fieldPos);
     mDrawComponent = new DrawSpriteComponent(this, "../Assets/Sprites/Fields/court_04.png" , width, length);
@@ -31,12 +31,12 @@ void Field::CreateColliders() {
     float y = 900.0f;
     float offset = 85.0f;
 
-    float windowWidth = mGame->GetWindowWidth();
-    float windowHeight = mGame->GetWindowHeight();
+    float windowWidth = mScene->GetGame()->GetWindowWidth();
+    float windowHeight = mScene->GetGame()->GetWindowHeight();
 
     std::vector<Vector2> vertices;
 
-    new Wall(mGame, windowWidth - x, windowHeight - y, x - 300, length, ColliderLayer::Wall);
+    new Wall(mScene, windowWidth - x, windowHeight - y, x - 300, length, ColliderLayer::Wall);
 
     if (mOnDebug) {
         vertices.emplace_back(windowWidth - x, windowHeight - y);
@@ -48,7 +48,7 @@ void Field::CreateColliders() {
     }
 
     y = 310.0f;
-    new Wall(mGame, windowWidth - x, windowHeight - y, x - 300, length, ColliderLayer::Wall);
+    new Wall(mScene, windowWidth - x, windowHeight - y, x - 300, length, ColliderLayer::Wall);
 //    new AABBColliderComponent(this, windowWidth - x, windowHeight - y, x - 300, length , ColliderLayer::Wall);
 
     if (mOnDebug) {
@@ -62,7 +62,7 @@ void Field::CreateColliders() {
 
     x = 1320.0f;
     y = 880.0f;
-    new Wall(mGame, windowWidth - x, windowHeight - y, length, offset, ColliderLayer::Wall);
+    new Wall(mScene, windowWidth - x, windowHeight - y, length, offset, ColliderLayer::Wall);
 //    new AABBColliderComponent(this, windowWidth - x, windowHeight - y, length, offset, ColliderLayer::Wall);
 
     if (mOnDebug) {
@@ -76,7 +76,7 @@ void Field::CreateColliders() {
     }
 
     y = 710.0f;
-    new Wall(mGame, windowWidth - x, y - offset, length, offset, ColliderLayer::Wall);
+    new Wall(mScene, windowWidth - x, y - offset, length, offset, ColliderLayer::Wall);
 //    new AABBColliderComponent(this, windowWidth- x, y - offset, length, offset, ColliderLayer::Wall);
 
    if (mOnDebug) {
@@ -91,7 +91,7 @@ void Field::CreateColliders() {
 
     x = 300.0f;
     y = 880.0f;
-    new Wall(mGame, windowWidth - x, windowHeight - y, length, offset, ColliderLayer::Wall);
+    new Wall(mScene, windowWidth - x, windowHeight - y, length, offset, ColliderLayer::Wall);
 //    new AABBColliderComponent(this, windowWidth - x, windowHeight - y, length, offset, ColliderLayer::Wall);
 
     if (mOnDebug) {
@@ -105,7 +105,7 @@ void Field::CreateColliders() {
     }
 
     y = 710.0f;
-    new Wall(mGame, windowWidth - x, y - offset, length, offset, ColliderLayer::Wall);
+    new Wall(mScene, windowWidth - x, y - offset, length, offset, ColliderLayer::Wall);
 //    new AABBColliderComponent(this, windowWidth - x, y - offset, length, offset, ColliderLayer::Wall);
 
     if (mOnDebug) {
@@ -121,7 +121,7 @@ void Field::CreateColliders() {
     x = 290.0f;
     y = 795.0f;
     offset = 400.0f;
-    new Wall(mGame, windowWidth - x, windowHeight - y, length, offset, ColliderLayer::Goal);
+    new Wall(mScene, windowWidth - x, windowHeight - y, length, offset, ColliderLayer::Goal);
 //    new AABBColliderComponent(this, windowWidth - x, windowHeight - y, length, offset, ColliderLayer::Goal);
 
     if (mOnDebug) {
@@ -136,7 +136,7 @@ void Field::CreateColliders() {
 
     x = 1330;
     offset = 400;
-    new Wall(mGame, windowWidth - x, windowHeight - y, length, offset, ColliderLayer::Goal);
+    new Wall(mScene, windowWidth - x, windowHeight - y, length, offset, ColliderLayer::Goal);
 //    new AABBColliderComponent(this, windowWidth - x, windowHeight - y, length, offset, ColliderLayer::Goal);
 
     if (mOnDebug) {

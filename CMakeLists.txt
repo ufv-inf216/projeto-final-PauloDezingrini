@@ -64,6 +64,11 @@ add_executable(${PROJECT_NAME}
         Source/Actors/Characters/States/ChaseState.h
         Source/Actors/Characters/States/PositionState.cpp
         Source/Actors/Characters/States/PositionState.h
+        Source/Scenes/Menu.cpp
+        Source/Scenes/Scene.cpp
+        Source/Scenes/Match.h
+        Source/Font.cpp
+        Source/Scenes/Match.cpp
 )
 
 ####### DO NOT EDIT BELLOW

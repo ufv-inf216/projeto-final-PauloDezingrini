@@ -13,7 +13,7 @@
 
 class Ball : public Actor {
 public:
-    explicit Ball(Game* game, float size, float mass);
+    explicit Ball(Scene* scene, float size, float mass);
 
     void OnProcessInput(const Uint8* keyState) override;
 private:

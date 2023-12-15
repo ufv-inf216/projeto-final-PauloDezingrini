@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include "../Math.h"
 #include "../Components/ColliderComponents/AABBColliderComponent.h"
+#include "../Scenes/Scene.h"
 
 enum class ActorState
 {
@@ -23,7 +24,7 @@ enum class ActorState
 class Actor
 {
 public:
-    Actor(class Game* game);
+    Actor(class Scene* scene);
     virtual ~Actor();
 
     // Update function called from Game (not overridable)
@@ -50,7 +51,7 @@ public:
     void SetState(ActorState state) { mState = state; }
 
     // Game getter
-    class Game* GetGame() { return mGame; }
+    class Game* GetGame() { return mScene->GetGame(); }
 
     // Returns component of type T, or null if doesn't exist
     template <typename T>
@@ -86,8 +87,8 @@ public:
     virtual void Kill();
 
 protected:
-    class Game* mGame;
-
+    //class Game* mGame;
+    class Scene* mScene;
     // Any actor-specific update code (overridable)
     virtual void OnUpdate(float deltaTime);
     // Any actor-specific update code (overridable)
