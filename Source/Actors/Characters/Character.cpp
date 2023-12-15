@@ -4,13 +4,15 @@
 
 #include "Character.h"
 #include "../../Game.h"
+#include "States/GoalKeeperState.h"
 
-Character::Character(Game* game, const std::string &name, const std::string &texturePath, bool isPlayer, float size, float forwardSpeed, float mass)
+Character::Character(Game* game, const std::string &name, const std::string &texturePath, bool isPlayer, float size, float forwardSpeed, bool isGoalkeeper, float mass)
         :Actor(game)
         ,mName(name)
         ,mForwardSpeed(forwardSpeed)
         ,mSize(size)
         ,mIsPlayer(isPlayer)
+        ,mIsGoalKeeper(isGoalkeeper)
 {
     const float width = 31;
     const float height = 46;
@@ -21,6 +23,15 @@ Character::Character(Game* game, const std::string &name, const std::string &tex
 //    mPlayerColliderComponent = new AABBColliderComponent(this, 0, 0, 64, 64, ColliderLayer::Player);
     mPlayerColliderComponent = new CircleColliderComponent(this, (width + height) / 4, false);
 //    mRadiusColliderComponent = new CircleColliderComponent(this, ((width + height) / 4) * 2.5, false, true);
+
+    mFsmComponent = nullptr;
+    if (!isPlayer) {
+        mFsmComponent = new FSMComponent(this);
+        if (isGoalkeeper) {
+            new GoalKeeperState(mFsmComponent, "goalkeeper");
+            mFsmComponent->Start("goalkeeper");
+        }
+    }
 }
 
 void Character::OnProcessInput(const uint8_t* state)
@@ -53,7 +64,10 @@ void Character::OnProcessInput(const uint8_t* state)
 ////
 ////            mGame->PlayKickAudio();
 ////        }
-
+        return;
+    }
+    if (mIsGoalKeeper && mFsmComponent->GetState()->GetName() == "start") {
+        mFsmComponent->SetState("goalkeeper");
     }
 }
 

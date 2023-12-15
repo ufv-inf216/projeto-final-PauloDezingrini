@@ -56,6 +56,10 @@ add_executable(${PROJECT_NAME}
         Source/Actors/ScoreBoard.h
         Source/Components/DrawComponents/DrawFontComponent.cpp
         Source/Components/DrawComponents/DrawFontComponent.h
+        Source/Components/AIComponents/FSMComponent.cpp
+        Source/Components/AIComponents/FSMState.cpp
+        Source/Actors/Characters/States/GoalKeeperState.h
+        Source/Actors/Characters/States/GoalKeeperState.cpp
 )
 
 ####### DO NOT EDIT BELLOW
