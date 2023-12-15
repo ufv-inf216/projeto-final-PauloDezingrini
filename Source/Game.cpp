@@ -46,7 +46,7 @@ Game::Game(int windowWidth, int windowHeight)
         ,mWindowHeight(windowHeight)
         ,mGameState(GameScene::Menu)
 {
-    //mScore = new std::unordered_map<bool, int>();
+    mScore = new std::unordered_map<bool, int>();
 
 }
 
@@ -130,8 +130,8 @@ void Game::SetScene(GameScene gameState)
 
     // Handle scene transition
     mGameState = gameState;
-//    UnloadActors();
-//    InitializeActors();
+    //UnloadActors();
+    //InitializeActors();
 }
 void Game::LoadLevel(const std::string& levelPath, const int width, const int height)
 {
@@ -181,7 +181,6 @@ void Game::ProcessInput() {
     SDL_Event event;
 
     if (controllers.empty()) { //caso nao tenha controle, processar comandos de teclado
-        //std::cout << "Nenhum controle encontrado" << std::endl;
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
@@ -197,11 +196,10 @@ void Game::ProcessInput() {
 
             actor->ProcessInput(state);
         }
-
+        mScene->ProcessInput(state);
         return;
 
     }
-
     for (auto controller: controllers) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
@@ -252,9 +250,9 @@ void Game::UpdateGame()
     startTime = mTicksCount;
 
     //mGameClock->update(elapsedTimeSeconds, mTicksCount);
-    /*mScene->Update(deltaTime, elapsedTimeSeconds);
+    mScene->Update(deltaTime, elapsedTimeSeconds);
     // Check if the match is finished(by time or goals)
-    if (mScene->CheckMatchEnded()) {
+    /*if (mScene->CheckMatchEnded()) {
         std::cout << "The match is finished!" << std::endl;
         //Play sound effect
         Shutdown();
@@ -277,6 +275,7 @@ void Game::UpdateGame()
             mSceneTransitionTime = 0.0f;
             mFadeState = FadeState::FadeIn;
 
+            UnloadActors();
             InitializeActors();
         }
     }
@@ -408,6 +407,19 @@ void Game::GenerateOutput()
         }
     }
 
+    // Apply fade effect if changing scene
+    if (mFadeState == FadeState::FadeOut)
+    {
+        SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
+        SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, static_cast<Uint8>(255 * mSceneTransitionTime/SCENE_TRANSITION_TIME));
+        SDL_RenderFillRect(mRenderer, nullptr);
+    }
+    else if (mFadeState == FadeState::FadeIn)
+    {
+        SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
+        SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, static_cast<Uint8>(255 * (1.0f - mSceneTransitionTime/SCENE_TRANSITION_TIME)));
+        SDL_RenderFillRect(mRenderer, nullptr);
+    }
     // Swap front buffer and back buffer
     SDL_RenderPresent(mRenderer);
 }
@@ -444,13 +456,19 @@ SDL_Texture* Game::LoadFontTexture(const std::string& texturePath, const std::st
 void Game::LoadData(const std::string& fileName) {
 
 }
-
-void Game::Shutdown()
+void Game::UnloadActors()
 {
     while (!mActors.empty())
     {
         delete mActors.back();
     }
+
+    delete mScene;
+}
+
+void Game::Shutdown()
+{
+    UnloadActors();
 
     SDL_DestroyRenderer(mRenderer);
     SDL_DestroyWindow(mWindow);

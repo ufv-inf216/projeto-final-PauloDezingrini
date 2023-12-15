@@ -5,11 +5,12 @@
 #pragma once
 
 #include "Actor.h"
+#include "../Scenes/Scene.h"
 
 class Spawner : public Actor
 {
 public:
-    explicit Spawner(Game* game, float spawnDistance);
+    explicit Spawner(Scene* scene, float spawnDistance);
 
     void OnUpdate(float deltaTime) override;
 private:

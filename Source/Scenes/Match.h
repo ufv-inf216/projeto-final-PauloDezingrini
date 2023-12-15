@@ -24,13 +24,11 @@ public:
     const Vector2& GetCameraPos() override;
     void Update(float deltaTime, float elapsedTimeSeconds);
     //class HUD *GetHUD() { return mHUD; }
-    std::unordered_map<bool, int>* GetScore() { return mScore; }
 
-    void ResetMatchState();
+    void ResetMatchState() override;
     Ball * GetBall();
-    bool CheckMatchEnded();
-    bool ScoreReached() const;
-    void ScoreGoal(bool team);
+    bool CheckMatchEnded() override;
+    virtual bool ScoreReached() const;
 
     void PlayKickAudio();
 

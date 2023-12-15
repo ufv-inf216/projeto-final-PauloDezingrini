@@ -15,6 +15,7 @@ public:
     void ProcessInput(const Uint8* keyState) override;
     DrawFontComponent* mDrawComponent;
     void Update(float deltatime, float elapsedTimeSeconds);
+    std::unordered_map<bool, int>* GetScore();
 
 private:
     class Font *mMenuFont;

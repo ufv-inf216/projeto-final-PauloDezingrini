@@ -21,30 +21,31 @@ Menu::Menu(Game* game)
 void Menu::Load()
 {
     // Background and Title
-    auto *background = new Actor(mGame);
+    auto *background = new Actor(this);
     new DrawSpriteComponent(background, "../Assets/Sprites/Menu/Background.jpeg", 1472, 1024);
     //new DrawSpriteComponent(background, "../Assets/Sprites/Menu/Title.png", 348, 172);
 
     // Press Space label
-    auto *pressSpace = new Actor(mGame);
+    auto *pressSpace = new Actor(this);
     pressSpace->SetPosition(Vector2(mGame->GetWindowWidth()/2.0f, mGame->GetWindowHeight() - 42.0f));
     new DrawFontComponent(pressSpace, "../Assets/Fonts/bruder/BRUDER.ttf", 640, 640, 400, 256, "Press Space");
 
-    auto *title = new Actor(mGame);
+    auto *title = new Actor(this);
     title->SetPosition(Vector2(mGame->GetWindowWidth()/2.0f, mGame->GetWindowHeight() - 42.0f));
-    new DrawFontComponent(title, "../Assets/Fonts/bruder/BRUDER.ttf", 540, 200, 512, 256, "BRAZIL STRIKERS");
+    new DrawFontComponent(title, "../Assets/Fonts/bruder/BRUDER.ttf", 520, 250, 512, 256, "BRAZIL STRIKERS");
 }
 
 void Menu::ProcessInput(const Uint8 *keyState)
 {
-    SDL_Log("asdasdas");
     if(keyState[SDL_SCANCODE_SPACE])
     {
-        SDL_Log("asdasdas");
         mGame->SetScene(Game::GameScene::Match);
     }
 }
 
-void Menu::Update(float deltatime, float elapsedTimeSeconds){
+void Menu::Update(float deltaTime, float elapsedTimeSeconds){
+
+}
+std::unordered_map<bool, int>* Menu::GetScore() {
 
 }

@@ -6,8 +6,8 @@
 #include <SDL.h>
 #include <sstream>
 #include <iomanip>
-GameClock::GameClock(Game* game, float maxTime, std::string texturePath, int posX, int posY, int width, int height) :
-        Actor(game),
+GameClock::GameClock(Scene* scene, float maxTime, std::string texturePath, int posX, int posY, int width, int height) :
+        Actor(scene),
         maxTime(maxTime),
         elapsedTimeInSeconds(0.0f),
         mTexturePath(texturePath)

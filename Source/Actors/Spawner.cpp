@@ -7,8 +7,8 @@
 
 const float GOOMBA_FORWARD_SPEED = 100.0f;
 
-Spawner::Spawner(Game* game, float spawnDistance)
-        :Actor(game)
+Spawner::Spawner(Scene* scene, float spawnDistance)
+        :Actor(scene)
         ,mSpawnDistance(spawnDistance)
 {
 

@@ -3,7 +3,7 @@
 //
 
 #include "Scene.h"
-
+//#include "../Actors/Ball.h"
 Scene::Scene(Game* game)
 {
     mGame = game;
@@ -32,10 +32,7 @@ void Scene::ResetMatchState()
 {
 
 };
-Ball * Scene::GetBall()
-{
 
-};
 bool Scene::CheckMatchEnded()
 {
 
@@ -43,7 +40,4 @@ bool Scene::CheckMatchEnded()
 bool Scene::ScoreReached() const {
 
 };
-void ScoreGoal(bool team)
-{
 
-};

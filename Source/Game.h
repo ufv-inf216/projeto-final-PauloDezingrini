@@ -73,7 +73,7 @@ public:
 
     SDL_Texture* LoadTexture(const std::string& texturePath);
     SDL_Texture* LoadFontTexture(const std::string& texturePath, const std::string& text);
-
+    std::unordered_map<bool, int>* GetScore();
     // Game-specific
     /*void ResetMatchState();
     Ball * GetBall();
@@ -86,6 +86,7 @@ public:
     void SetScene(GameScene gameState);
     class Scene *mScene;
     std::vector<class Actor*> mActors;
+    void UnloadActors();
 
 private:
 
@@ -141,6 +142,8 @@ private:
     //std::vector<Wall*> mGoals;
     //std::vector<Character*> mCharacters;
     //std::unordered_map<bool, int>* mScore;
+
+    std::unordered_map<bool, int>* mScore;
 
     float audioCooldown = 0.0f;
     const float audioCooldownTime = 0.1f; // Tempo de cooldown em segundos

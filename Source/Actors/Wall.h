@@ -9,10 +9,11 @@
 
 #include "../Components/ColliderComponents/AABBColliderComponent.h"
 #include "Actor.h"
+#include "../Scenes/Scene.h"
 
 class Wall : public Actor {
 public:
-    Wall(Game* game, float dx, float dy, float w, float h, ColliderLayer layer, bool isGoal = false);
+    Wall(Scene* scene, float dx, float dy, float w, float h, ColliderLayer layer, bool isGoal = false);
 
 private:
     bool mIsGoal;

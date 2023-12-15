@@ -103,10 +103,10 @@ void AABBColliderComponent::ResolveCollisions(RigidBodyComponent *rigidBody, con
     }
 
     if (mLayer == ColliderLayer::Goal && minOverlap.target->GetIsBall()) {
-        /*owner->GetGame()->ResetMatchState();
-        auto score = owner->GetGame()->GetScore();
-        auto it = score->find(owner->GetTeam());
-        owner->GetGame()->ScoreGoal(it->first);*/
+        //owner->GetGame()->mScene->ResetMatchState();
+        //auto score = owner->GetGame()->GetScore();
+        //auto it = score->find(owner->GetTeam());
+        //owner->GetGame()->mScene->ScoreGoal(it->first);
     }
 
     owner->SetPosition(pos);
@@ -136,7 +136,6 @@ void AABBColliderComponent::DetectCollision(RigidBodyComponent *rigidBody)
 
         if (::Intersect(*collider, *this)) {
             Overlap minOverlap = GetMinOverlap(collider);
-            SDL_Log("Overlap: Amount: %f", minOverlap.amount);
             ResolveCollisions(collider->GetOwner()->GetComponent<RigidBodyComponent>(), minOverlap);
             responses.emplace(minOverlap.side, minOverlap);
             if (minOverlap.side == CollisionSide::Right || minOverlap.side == CollisionSide::Left) {
@@ -159,7 +158,6 @@ float AABBColliderComponent::MinDistSq(const Vector2 &point) const {
 
     Vector2 min = GetMin();
     Vector2 max = GetMax();
-
     // Compute differences for each axis
     float dx = Math::Max(min.x - point.x, 0.0f);
     dx = Math::Max(dx, point.x - max.x);
