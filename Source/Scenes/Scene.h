@@ -7,6 +7,7 @@
 #include <SDL_stdinc.h>
 #include "../Math.h"
 //#include "../Actors/Ball.h"
+//#include "../Actors/Ball.h"
 #include <algorithm>
 
 class Scene
@@ -21,9 +22,10 @@ public:
     class Game* GetGame() { return mGame; }
 
 
+
     virtual const Vector2& GetCameraPos();
     virtual void ResetMatchState();
-    //Ball * GetBall();
+    //virtual Ball * GetBall();
     virtual bool CheckMatchEnded();
     virtual bool ScoreReached() const;
     virtual void updateScoreBoard(bool team, int goalNumber);

@@ -3,7 +3,8 @@
 //
 
 #include "Scene.h"
-//#include "../Actors/Ball.h"
+#include "../Actors/Ball.h"
+
 Scene::Scene(Game* game)
 {
     mGame = game;
@@ -44,3 +45,7 @@ void Scene::updateScoreBoard(bool team, int goalNumber)
 {
 
 }
+
+/*Ball * Scene::GetBall() {
+
+}*/

@@ -18,7 +18,7 @@
 #include "Components/DrawComponents/DrawComponent.h"
 #include "Components/DrawComponents/DrawTileComponent.h"
 #include "Components/ColliderComponents/AABBColliderComponent.h"
-#include "Actors/Field.h"
+//#include "Actors/Field.h"
 #include "Actors/Characters/Character.h"
 #include "CSV.h"
 #include "Actors/Wall.h"
@@ -88,6 +88,7 @@ bool Game::Initialize()
 
     mScore->insert(std::make_pair<bool, int>(true, 0));
     mScore->insert(std::make_pair<bool, int>(false, 0));
+
     // Init all game actors
     InitializeActors();
     return true;
@@ -103,7 +104,7 @@ void Game::InitializeActors()
             break;
 
         case GameScene::Match:
-          mScene = new Match(this);
+          mScene = new Match(this, 0, 0);
           mScene->Load();
           break;
         default:
@@ -490,6 +491,7 @@ void Game::ScoreGoal(bool team) {
     auto it = mScore->find(team);
     it->second += 1;
     mScene->updateScoreBoard(team, it->second);
+    //SetScene(GameScene::Match);
 }
 
 std::unordered_map<bool, int>* Game::GetScore(){

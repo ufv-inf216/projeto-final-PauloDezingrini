@@ -8,7 +8,7 @@
 #include "States/ChaseState.h"
 #include "States/PositionState.h"
 
-Character::Character(Scene* scene, const std::string &name, const std::string &texturePath, bool isPlayer, float size, float forwardSpeed, float mass)
+Character::Character(Scene* scene, const std::string &name, const std::string &texturePath, bool isPlayer, float size, bool isGoalkeeper, float forwardSpeed, float mass )
         :Actor(scene)
         ,mName(name)
         ,mForwardSpeed(forwardSpeed)

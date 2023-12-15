@@ -1,15 +1,13 @@
 //
 // Created by Paulo Dezingrini on 12/11/2023.
 //
-
+#pragma once
 #ifndef BRAZILSTRIKERS_BALL_H
 #define BRAZILSTRIKERS_BALL_H
-
 #include "Actor.h"
+#include "../Scenes/Scene.h"
 #include "../Components/DrawComponents/DrawSpriteComponent.h"
 #include "../Components/ColliderComponents/CircleColliderComponent.h"
-
-#pragma once
 
 class Ball : public Actor {
 public:

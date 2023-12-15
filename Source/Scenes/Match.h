@@ -5,7 +5,7 @@
 #pragma once
 
 #include "Scene.h"
-#include "../Actors/Actor.h"
+//#include "../Actors/Actor.h"
 #include "../Actors/ScoreBoard.h"
 #include "../Actors/Ball.h"
 #include "../Actors/Wall.h"
@@ -17,7 +17,7 @@
 class Match : public Scene
 {
 public:
-    Match(class Game* game);
+    Match(class Game* game, int valorA, int ValorB);
     ~Match();
 
     void Load() override;
@@ -26,12 +26,14 @@ public:
     //class HUD *GetHUD() { return mHUD; }
 
     void ResetMatchState() override;
-    Ball * GetBall();
+    //Ball * GetBall() override;
     bool CheckMatchEnded() override;
     virtual bool ScoreReached() const;
     void updateScoreBoard(bool team, int goalNumber) override;
 
     void PlayKickAudio();
+    int valorA;
+    int valorB;
 
 private:
     void LoadData(const std::string& fileName);
@@ -46,7 +48,7 @@ private:
     std::vector<Wall*> mGoals;
     int numPlayersTeam0 = 1;
     int numPlayersTeam1 = 1;
-    Ball* mBall;
+    Ball * mBall;
     std::vector<std::string> spritesBlue;
     std::vector<std::string> spritesRed;
     GameClock * mGameClock;

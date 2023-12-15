@@ -10,9 +10,9 @@
 #include <SDL.h>
 #include <vector>
 #include "Math.h"
+//#include "Actors/Characters/Character.h"
 #include "Actors/Ball.h"
-#include "Actors/Wall.h"
-#include "Actors/Characters/Character.h"
+//#include "Actors/Wall.h"
 #include <string>
 #include "AudioSystem.h"
 #include "GameClock.h"
@@ -69,7 +69,7 @@ public:
     int GetWindowWidth() const { return mWindowWidth; }
     int GetWindowHeight() const { return mWindowHeight; }
     Ball* GetBall() const { return mBall; }
-    std::vector<Wall*> GetGoals() const { return mGoals; }
+    //std::vector<Wall*> GetGoals() const { return mGoals; }
 
     AudioSystem* GetAudio() { return mAudio; }
 
@@ -89,7 +89,7 @@ public:
     class Scene *mScene;
     std::vector<class Actor*> mActors;
     void UnloadActors();
-
+    Ball* mBall;
 private:
 
     SDL_GameController *findController();
@@ -137,7 +137,7 @@ private:
     // Game-specific
     //int numPlayersTeam0 = 1;
     //int numPlayersTeam1 = 1;
-    //Ball* mBall;
+   // Ball* mBall;
     //Actor* mMap;
     //std::vector<std::string> spritesBlue;
     //std::vector<std::string> spritesRed;

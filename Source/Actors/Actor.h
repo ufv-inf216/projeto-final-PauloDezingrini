@@ -5,7 +5,8 @@
 // Released under the BSD License
 // See LICENSE in root directory for full details.
 // ----------------------------------------------------------------
-
+#ifndef BRAZILSTRIKERS_ACTOR_H
+#define BRAZILSTRIKERS_ACTOR_H
 #pragma once
 #include <vector>
 #include <SDL_stdinc.h>
@@ -13,6 +14,7 @@
 #include "../Math.h"
 #include "../Components/ColliderComponents/AABBColliderComponent.h"
 #include "../Scenes/Scene.h"
+//#include "Ball.h"
 
 enum class ActorState
 {
@@ -118,3 +120,5 @@ private:
     // in the component constructor)
     void AddComponent(class Component* c);
 };
+
+#endif //BRAZILSTRIKERS_ACTOR_H

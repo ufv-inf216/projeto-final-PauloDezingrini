@@ -69,16 +69,17 @@ add_executable(${PROJECT_NAME}
         Source/Actors/Characters/States/ChaseState.h
         Source/Actors/Characters/States/PositionState.cpp
         Source/Actors/Characters/States/PositionState.h
+        Source/Actors/Characters/States/GoalKeeperState.cpp
 )
 
 ####### DO NOT EDIT BELLOW
 find_package(SDL2 2.28.2 EXACT REQUIRED)
 find_package(SDL2_image REQUIRED)
-find_package(SDL2_mixer REQUIRED)
-find_package(SDL2_ttf REQUIRED)
-#find_library(SDL2_mixer SDL2_mixer)
-#find_library(SDL2TTF_LIBRARIES SDL2_ttf)
+#find_package(SDL2_mixer REQUIRED)
+#find_package(SDL2_ttf REQUIRED)
+find_library(SDL2_mixer SDL2_mixer)
+find_library(SDL2TTF_LIBRARIES SDL2_ttf)
 
 include_directories(${SDL2_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIRS})
-#target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} SDL2_image::SDL2_image SDL2_mixer::SDL2_mixer SDL2_ttf::SDL2_ttf ${SDL2TTF_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} SDL2_image::SDL2_image SDL2_mixer::SDL2_mixer SDL2_ttf::SDL2_ttf)
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} SDL2_image::SDL2_image SDL2_mixer SDL2_ttf ${SDL2TTF_LIBRARIES})
+#target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} SDL2_image::SDL2_image SDL2_mixer::SDL2_mixer SDL2_ttf::SDL2_ttf)

@@ -50,3 +50,7 @@ void Menu::Update(float deltaTime, float elapsedTimeSeconds){
 void Menu::updateScoreBoard(bool team, int goalNumber){
 
 }
+/*
+Ball * Menu::GetBall() {
+
+}*/

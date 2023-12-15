@@ -16,6 +16,7 @@ public:
     DrawFontComponent* mDrawComponent;
     void Update(float deltatime, float elapsedTimeSeconds);
     virtual void updateScoreBoard(bool team, int goalNumber);
+    //Ball * GetBall();
 
 private:
     class Font *mMenuFont;
