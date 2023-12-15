@@ -12,12 +12,15 @@ Character::Character(Game* game, const std::string &name, const std::string &tex
         ,mSize(size)
         ,mIsPlayer(isPlayer)
 {
+    const float width = 31;
+    const float height = 46;
     SetControllable(isPlayer);
 
     mRigidBodyComponent = new RigidBodyComponent(this, mass, 2.0f);
-    mDrawSpriteComponent = new DrawSpriteComponent(this, texturePath, 31, 46);
+    mDrawSpriteComponent = new DrawSpriteComponent(this, texturePath, width, height);
 //    mPlayerColliderComponent = new AABBColliderComponent(this, 0, 0, 64, 64, ColliderLayer::Player);
-    mPlayerColliderComponent = new CircleColliderComponent(this, 46/2, false, false);
+    mPlayerColliderComponent = new CircleColliderComponent(this, (width + height) / 4, false);
+//    mRadiusColliderComponent = new CircleColliderComponent(this, ((width + height) / 4) * 2.5, false, true);
 }
 
 void Character::OnProcessInput(const uint8_t* state)
@@ -27,10 +30,13 @@ void Character::OnProcessInput(const uint8_t* state)
 //    }
 
     if (mIsPlayer) {
+        mRigidBodyComponent->SetAcceleration(Vector2::Zero);
          if (state[SDL_SCANCODE_D] && this->mName == "Player0" || state[SDL_SCANCODE_RIGHT] && this->mName == "Player1") {
             mRigidBodyComponent->ApplyForce(Vector2(mForwardSpeed, 0));
+            SetRotation(0);
         } else if (state[SDL_SCANCODE_A] && this->mName == "Player0" || state[SDL_SCANCODE_LEFT] && this->mName == "Player1"){
             mRigidBodyComponent->ApplyForce(Vector2(-mForwardSpeed, 0));
+            SetRotation(1);
         }
 
         if (state[SDL_SCANCODE_W] && this->mName == "Player0" || state[SDL_SCANCODE_UP] && this->mName == "Player1") {
@@ -38,6 +44,16 @@ void Character::OnProcessInput(const uint8_t* state)
         } else if (state[SDL_SCANCODE_S] && this->mName == "Player0" || state[SDL_SCANCODE_DOWN] && this->mName == "Player1"){
             mRigidBodyComponent->ApplyForce(Vector2(0, mForwardSpeed));
         }
+
+//        Ball* ball = mGame->GetBall();
+////        if (state[SDL_SCANCODE_SPACE] && mRadiusColliderComponent->Intersect(*ball->GetComponent<CircleColliderComponent>()) && mName == "Player0") {
+////            Vector2 kick = mGame->GetGoals()[1]->GetPosition() + mRigidBodyComponent->GetVelocity();
+////            kick.Normalize();
+////            ball->GetComponent<RigidBodyComponent>()->ApplyForce(kick * mForwardSpeed * 3.5);
+////
+////            mGame->PlayKickAudio();
+////        }
+
     }
 }
 

@@ -435,7 +435,7 @@ void Game::LoadData(const std::string& fileName) {
                 if (tiles[5] == "True") {
                     bool isPlayer = numPlayersTeam0 > 0;
                     numPlayersTeam0--;
-                    auto player = new Character(this, "Player0", spritesBlue.back(),  isPlayer, 48, 750);
+                    auto player = new Character(this, "Player0", spritesBlue.back(),  isPlayer, 48, 600);
                     player->SetPosition(Vector2(x, y));
                     player->SetDefaultPosition(player->GetPosition());
                     player->SetTeam(tiles[5] == "True");
@@ -443,10 +443,11 @@ void Game::LoadData(const std::string& fileName) {
                 } else {
                     bool isPlayer = numPlayersTeam1 > 0;
                     numPlayersTeam1--;
-                    auto player = new Character(this, "Player1", spritesRed.back(), isPlayer, 48);
+                    auto player = new Character(this, "Player1", spritesRed.back(), isPlayer, 48, 600);
                     player->SetPosition(Vector2(x, y));
                     player->SetDefaultPosition(player->GetPosition());
                     player->SetTeam(tiles[5] == "True");
+                    player->SetRotation(1.0);
                     spritesRed.pop_back();
                 }
             }

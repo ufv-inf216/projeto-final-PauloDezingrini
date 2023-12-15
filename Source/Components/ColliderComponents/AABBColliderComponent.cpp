@@ -81,6 +81,7 @@ AABBColliderComponent::Overlap AABBColliderComponent::GetMinOverlap(CircleCollid
 
 void AABBColliderComponent::ResolveCollisions(RigidBodyComponent *rigidBody, const Overlap& minOverlap)
 {
+
     auto owner = rigidBody->GetOwner();
     Vector2 pos = owner->GetPosition();
 
@@ -134,7 +135,7 @@ void AABBColliderComponent::DetectCollision(RigidBodyComponent *rigidBody)
             continue;
         }
 
-        if (::Intersect(*collider, *this)) {
+        if (::Intersect(*collider, *this) && !collider->GetIsRange()) {
             Overlap minOverlap = GetMinOverlap(collider);
             SDL_Log("Overlap: Amount: %f", minOverlap.amount);
             ResolveCollisions(collider->GetOwner()->GetComponent<RigidBodyComponent>(), minOverlap);

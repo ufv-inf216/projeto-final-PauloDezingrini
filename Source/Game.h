@@ -56,6 +56,8 @@ public:
     // Window functions
     int GetWindowWidth() const { return mWindowWidth; }
     int GetWindowHeight() const { return mWindowHeight; }
+    Ball* GetBall() const { return mBall; }
+    std::vector<Wall*> GetGoals() const { return mGoals; }
 
     AudioSystem* GetAudio() { return mAudio; }
 
