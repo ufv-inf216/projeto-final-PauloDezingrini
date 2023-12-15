@@ -110,6 +110,7 @@ void Game::InitializeActors()
     teamAScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 1280, 10, 150, 65, std::to_string((*mScore)[false]));
     teamBScoreBoard = new ScoreBoard(this, "../Assets/Fonts/bruder/BRUDER.ttf", 25, 10, 150, 65, std::to_string((*mScore)[true]));
 
+    mAudio->PlaySound("SoundTrack.mp3");
 }
 
 void Game::LoadLevel(const std::string& levelPath, const int width, const int height)
