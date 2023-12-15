@@ -15,7 +15,7 @@ public:
     void ProcessInput(const Uint8* keyState) override;
     DrawFontComponent* mDrawComponent;
     void Update(float deltatime, float elapsedTimeSeconds);
-    std::unordered_map<bool, int>* GetScore();
+    virtual void updateScoreBoard(bool team, int goalNumber);
 
 private:
     class Font *mMenuFont;

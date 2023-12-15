@@ -242,6 +242,7 @@ const Vector2& Match::GetCameraPos()
 
 void Match::ResetMatchState()
 {
+
     //Disable movement for every actor except for the ball
     for (Actor * character: mGame->mActors) {
         character->SetControllable(false);
@@ -290,5 +291,16 @@ void Match::Update(float deltaTime, float elapsedTimeSeconds) {
         SDL_Log("The match is finished!");
         //Play sound effect
         mGame->Shutdown();
+    }
+}
+
+void Match::updateScoreBoard(bool team, int goalNumber){
+
+    if(team) {
+        SDL_Log("true");
+        teamAScoreBoard->updateValue(std::to_string(goalNumber));
+    } else {
+        SDL_Log("false");
+        teamBScoreBoard->updateValue(std::to_string(goalNumber));
     }
 }

@@ -78,8 +78,8 @@ public:
     /*void ResetMatchState();
     Ball * GetBall();
     bool CheckMatchEnded();
-    bool ScoreReached() const;
-    void ScoreGoal(bool team);*/
+    bool ScoreReached() const;*/
+    void ScoreGoal(bool team);
 
     void PlayKickAudio();
 

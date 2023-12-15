@@ -29,6 +29,7 @@ public:
     Ball * GetBall();
     bool CheckMatchEnded() override;
     virtual bool ScoreReached() const;
+    void updateScoreBoard(bool team, int goalNumber) override;
 
     void PlayKickAudio();
 

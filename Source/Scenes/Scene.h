@@ -26,6 +26,7 @@ public:
     //Ball * GetBall();
     virtual bool CheckMatchEnded();
     virtual bool ScoreReached() const;
+    virtual void updateScoreBoard(bool team, int goalNumber);
 protected:
     class Game* mGame;
 };

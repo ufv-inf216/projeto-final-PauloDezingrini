@@ -40,4 +40,7 @@ bool Scene::CheckMatchEnded()
 bool Scene::ScoreReached() const {
 
 };
+void Scene::updateScoreBoard(bool team, int goalNumber)
+{
 
+}

@@ -86,6 +86,8 @@ bool Game::Initialize()
     // Play background music
     mAudio->PlaySound("Torcida.wav", true);
 
+    mScore->insert(std::make_pair<bool, int>(true, 0));
+    mScore->insert(std::make_pair<bool, int>(false, 0));
     // Init all game actors
     InitializeActors();
     return true;
@@ -481,4 +483,14 @@ void Game::PlayKickAudio() {
         audioCooldown = audioCooldownTime; // Reiniciar o cooldown
     }
 
+}
+
+void Game::ScoreGoal(bool team) {
+    auto it = mScore->find(team);
+    it->second += 1;
+    mScene->updateScoreBoard(team, it->second);
+}
+
+std::unordered_map<bool, int>* Game::GetScore(){
+    return mScore;
 }

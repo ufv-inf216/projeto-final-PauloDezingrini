@@ -46,6 +46,7 @@ void Menu::ProcessInput(const Uint8 *keyState)
 void Menu::Update(float deltaTime, float elapsedTimeSeconds){
 
 }
-std::unordered_map<bool, int>* Menu::GetScore() {
+
+void Menu::updateScoreBoard(bool team, int goalNumber){
 
 }
