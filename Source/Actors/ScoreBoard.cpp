@@ -4,8 +4,8 @@
 
 #include "ScoreBoard.h"
 
-ScoreBoard::ScoreBoard(Game *game, std::string texturePath, int posX, int posY, int width, int height, std::string value):
-        Actor(game),
+ScoreBoard::ScoreBoard(Scene *scene, std::string texturePath, int posX, int posY, int width, int height, std::string value):
+        Actor(scene),
         mValue(value),
         mWidth(width),
         mHeight(height),

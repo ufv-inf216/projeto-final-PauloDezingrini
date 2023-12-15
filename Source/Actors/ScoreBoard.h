@@ -7,10 +7,11 @@
 
 #include "../Components/DrawComponents/DrawFontComponent.h"
 #include "Actor.h"
+#include "../Scenes/Scene.h"
 #include <string>
 class ScoreBoard: Actor {
     public:
-        explicit ScoreBoard(Game* game, std::string texturePath, int posX, int posY, int width, int height, std::string value);
+        explicit ScoreBoard(Scene *scene, std::string texturePath, int posX, int posY, int width, int height, std::string value);
         void OnUpdate(float deltaTime) override;
         void updateValue(std::string value);
     private:

@@ -6,11 +6,14 @@
 #include "CircleColliderComponent.h"
 #include "../../Actors/Actor.h"
 #include "../../Game.h"
+#include "../DrawComponents/DrawPolygonComponent.h"
 
-CircleColliderComponent::CircleColliderComponent(class Actor* owner, const float radius, const bool isBall, const int updateOrder)
+CircleColliderComponent::CircleColliderComponent(class Actor* owner, const float radius, const bool isBall, const bool isRange, const int updateOrder)
         :Component(owner, updateOrder)
         ,mRadius(radius)
-        ,mIsBall(isBall) {
+        ,mIsBall(isBall)
+        ,mIsRange(isRange)
+        {
         owner->GetGame()->AddCollider(this);
 }
 
@@ -26,6 +29,9 @@ float CircleColliderComponent::GetRadius() const
 
 bool CircleColliderComponent::Intersect(const CircleColliderComponent& c) const
 {
+    if (mOwner == c.GetOwner()) {
+        return false;
+    }
     // Calculate amount squared
     Vector2 diff = GetCenter() - c.GetCenter();
     float distSq = diff.LengthSq();
@@ -110,13 +116,18 @@ void CircleColliderComponent::DetectCollision(RigidBodyComponent *rigidBody) {
         if (this != collider) {
 
             if (circle->Intersect(*collider)) {
-                Overlap minOverlap = GetMinOverlap(collider);
-                ResolveCollisions(rigidBody, minOverlap);
-                if (minOverlap.side) {
-                    verticalCollision = true;
+                if (collider->GetIsRange()) {
+
                 } else {
-                    horizontalCollision = true;
+                    Overlap minOverlap = GetMinOverlap(collider);
+                    ResolveCollisions(rigidBody, minOverlap);
+                    if (minOverlap.side) {
+                        verticalCollision = true;
+                    } else {
+                        horizontalCollision = true;
+                    }
                 }
+
             }
         }
 

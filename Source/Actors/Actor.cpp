@@ -11,22 +11,24 @@
 #include "../Components/Component.h"
 #include <algorithm>
 #include <iostream>
+#include "../Scenes/Scene.h"
 
-Actor::Actor(Game* game)
+Actor::Actor(Scene* scene)
         : mState(ActorState::Active)
         , mPosition(Vector2::Zero)
         , mScale(1.0f)
         , mRotation(0.0f)
-        , mGame(game)
+        , mScene(scene)
         , mIsOnGround(false)
         , mControllable(false)
 {
-    mGame->AddActor(this);
+    //mGame->AddActor(this);
+    GetGame()->AddActor(this);
 }
 
 Actor::~Actor()
 {
-    mGame->RemoveActor(this);
+    GetGame()->RemoveActor(this);
 
     for(auto component : mComponents)
     {
@@ -34,6 +36,7 @@ Actor::~Actor()
     }
     mComponents.clear();
 }
+
 
 void Actor::Update(float deltaTime)
 {

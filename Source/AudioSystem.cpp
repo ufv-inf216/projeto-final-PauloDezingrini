@@ -1,6 +1,6 @@
 #include "AudioSystem.h"
 #include "SDL.h"
-#include "SDL2/SDL_mixer.h"
+#include "SDL_mixer.h"
 #include <filesystem>
 
 SoundHandle SoundHandle::Invalid;
@@ -101,6 +101,7 @@ SoundHandle AudioSystem::PlaySound(const std::string& soundName, bool looping)
 
     // Create handle info
     mChannels[availableChannel] = mLastHandle;
+    Mix_Volume(availableChannel, 25);
 
     // Play sound on selected channel
     Mix_PlayChannel(availableChannel, sound, looping ? -1 : 0);

@@ -6,11 +6,12 @@
 
 #include <string>
 #include "Actor.h"
+#include "../Scenes/Scene.h"
 #include "../Components/DrawComponents/DrawSpriteComponent.h"
 
 class Field : public Actor {
 public:
-    explicit Field(Game* game, float width, float length);
+    explicit Field(Scene* scene, float width, float length);
 private:
     float mWidth;
     float mLength;

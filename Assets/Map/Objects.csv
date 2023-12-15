@@ -7,11 +7,11 @@ Wall,0,0,1472,96,,,,,,
 Wall,0,928,1472,96,,,,,,
 Goal,1392,384,80,256,False,,,,,
 Ball,736,512,0,0,,,,,,
-Player,191,510,0,0,True
-Player,1280,511,0,0,False
-Player,864,448,0,0,False
-Player,609,575,0,0,True
-Player,512,416,0,0,True
-Player,961,607,0,0,False
+Player,609,575,0,0,True,
+Player,864,448,0,0,False,
+Player,191,510,0,0,True,True
+Player,1280,511,0,0,False,True
+Player,512,416,0,0,True,
+Player,961,607,0,0,False,
 HUD,736,32,0,0,,,,,,
 Goal,0,384,80,256,True,,,,,

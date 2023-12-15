@@ -9,6 +9,7 @@
 #pragma once
 #include <SDL.h>
 #include "Actors/Actor.h"
+#include "Scenes/Scene.h"
 #include "./Components/DrawComponents/DrawFontComponent.h"
 
 class GameClock: public Actor {
@@ -19,7 +20,7 @@ class GameClock: public Actor {
         Uint32 lastSecond;
 
     public:
-        GameClock(Game* game, float maxTime, std::string texturePath, int posX, int posY, int width, int height);
+        GameClock(Scene* scene, float maxTime, std::string texturePath, int posX, int posY, int width, int height);
         void update(float deltaTime, Uint32 ticks);
         bool isMatchFinished() const;
         float getElapsedTime() const;
