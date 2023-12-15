@@ -61,6 +61,11 @@ add_executable(${PROJECT_NAME}
         Source/Actors/ScoreBoard.h
         Source/Components/DrawComponents/DrawFontComponent.cpp
         Source/Components/DrawComponents/DrawFontComponent.h
+        Source/Scenes/Menu.cpp
+        Source/Scenes/Scene.cpp
+        Source/Scenes/Match.h
+        Source/Font.cpp
+        Source/Scenes/Match.cpp
 )
 
 ####### DO NOT EDIT BELLOW

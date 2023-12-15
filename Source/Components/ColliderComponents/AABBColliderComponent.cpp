@@ -103,10 +103,10 @@ void AABBColliderComponent::ResolveCollisions(RigidBodyComponent *rigidBody, con
     }
 
     if (mLayer == ColliderLayer::Goal && minOverlap.target->GetIsBall()) {
-        owner->GetGame()->ResetMatchState();
+        /*owner->GetGame()->ResetMatchState();
         auto score = owner->GetGame()->GetScore();
         auto it = score->find(owner->GetTeam());
-        owner->GetGame()->ScoreGoal(it->first);
+        owner->GetGame()->ScoreGoal(it->first);*/
     }
 
     owner->SetPosition(pos);
