@@ -41,9 +41,6 @@ add_executable(${PROJECT_NAME}
         Source/Actors/Field.h
         Source/Actors/Ball.cpp
         Source/Actors/Ball.h
-        Source/Actors/Ball.h
-        Source/Actors/Ball.h
-        Source/Actors/Ball.h
         Source/Actors/Characters/Character.cpp
         Source/Actors/Characters/Character.h
         Source/Collision.cpp
@@ -51,8 +48,6 @@ add_executable(${PROJECT_NAME}
         Source/Actors/Wall.cpp
         Source/Actors/Wall.h
         Source/Components/DrawComponents/DrawTileComponent.cpp
-        Source/AudioSystem.h
-        Source/AudioSystem.cpp
         Source/AudioSystem.h
         Source/AudioSystem.cpp
         Source/GameClock.cpp
@@ -66,14 +61,24 @@ add_executable(${PROJECT_NAME}
         Source/Scenes/Match.h
         Source/Font.cpp
         Source/Scenes/Match.cpp
+        Source/Components/AIComponents/FSMComponent.cpp
+        Source/Components/AIComponents/FSMState.cpp
+        Source/Actors/Characters/States/GoalKeeperState.h
+        Source/Actors/Characters/States/GoalKeeperState.cpp
+        Source/Actors/Characters/States/ChaseState.cpp
+        Source/Actors/Characters/States/ChaseState.h
+        Source/Actors/Characters/States/PositionState.cpp
+        Source/Actors/Characters/States/PositionState.h
 )
 
 ####### DO NOT EDIT BELLOW
 find_package(SDL2 2.28.2 EXACT REQUIRED)
 find_package(SDL2_image REQUIRED)
-#find_package(SDL2_mixer REQUIRED)
-find_library(SDL2_mixer SDL2_mixer)
-find_library(SDL2TTF_LIBRARIES SDL2_ttf)
+find_package(SDL2_mixer REQUIRED)
+find_package(SDL2_ttf REQUIRED)
+#find_library(SDL2_mixer SDL2_mixer)
+#find_library(SDL2TTF_LIBRARIES SDL2_ttf)
 
 include_directories(${SDL2_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} SDL2_image::SDL2_image SDL2_mixer ${SDL2TTF_LIBRARIES})
+#target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} SDL2_image::SDL2_image SDL2_mixer::SDL2_mixer SDL2_ttf::SDL2_ttf ${SDL2TTF_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} SDL2_image::SDL2_image SDL2_mixer::SDL2_mixer SDL2_ttf::SDL2_ttf)

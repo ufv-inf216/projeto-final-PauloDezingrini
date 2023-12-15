@@ -24,6 +24,6 @@ void DrawSpriteComponent::Draw(SDL_Renderer *renderer)
     dstrect->h = mHeight;
     float rotation = mOwner->GetRotation();
     SDL_RendererFlip flip = rotation == 0 ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
-    SDL_RenderCopyEx(renderer, mSpriteSheetSurface, nullptr, dstrect, 0.0, nullptr, flip);
+    SDL_RenderCopyEx(renderer, mSpriteSheetSurface, nullptr, dstrect, 0.0f, nullptr, flip);
 
 }

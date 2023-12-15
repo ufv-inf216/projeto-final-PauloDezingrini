@@ -10,17 +10,43 @@ DrawPolygonComponent::DrawPolygonComponent(class Actor* owner, std::vector<Vecto
         :DrawComponent(owner)
         ,mVertices(vertices)
         ,mDrawOrder(drawOrder)
+        ,mIsCircle(false)
+        ,mRadius(0.0f)
 {
+}
+
+DrawPolygonComponent::DrawPolygonComponent(class Actor* owner, float radius, int numVertices, int drawOrder)
+        :DrawComponent(owner)
+        ,mDrawOrder(drawOrder)
+        ,mIsCircle(true)
+        ,mRadius(radius)
+{
+    std::vector<Vector2> vertices;
+
+    float angle = 0.0f;
+
+    for (int i = 0; i < 20; i++) {
+        float x = radius * Math::Cos(angle);
+        float y = radius * Math::Sin(angle);
+        vertices.emplace_back(x, y);
+        angle += Math::TwoPi / numVertices;
+    }
+
+    mVertices = vertices;
+
 }
 
 void DrawPolygonComponent::Draw(SDL_Renderer *renderer)
 {
-    // Set draw color to green
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 252, 244, 3, 255);
 
     Vector2 pos = mOwner->GetPosition();
     Vector2 cameraPos = mOwner->GetGame()->GetCameraPos();
 
+    if (mIsCircle) {
+        pos.x += mRadius/2;
+        pos.y += mRadius;
+    }
     // Render vertices as lines
     for(int i = 0; i < mVertices.size() - 1; i++) {
         SDL_RenderDrawLine(renderer, pos.x + mVertices[i].x - cameraPos.x,

@@ -5,6 +5,7 @@
 #include "DrawComponent.h"
 #include "../../Actors/Actor.h"
 #include "../../Game.h"
+#include "DrawPolygonComponent.h"
 
 DrawComponent::DrawComponent(class Actor* owner, int drawOrder)
     :Component(owner)
