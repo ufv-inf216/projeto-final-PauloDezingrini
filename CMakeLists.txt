@@ -60,6 +60,10 @@ add_executable(${PROJECT_NAME}
         Source/Components/AIComponents/FSMState.cpp
         Source/Actors/Characters/States/GoalKeeperState.h
         Source/Actors/Characters/States/GoalKeeperState.cpp
+        Source/Actors/Characters/States/ChaseState.cpp
+        Source/Actors/Characters/States/ChaseState.h
+        Source/Actors/Characters/States/PositionState.cpp
+        Source/Actors/Characters/States/PositionState.h
 )
 
 ####### DO NOT EDIT BELLOW

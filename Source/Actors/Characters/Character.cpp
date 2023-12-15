@@ -5,6 +5,8 @@
 #include "Character.h"
 #include "../../Game.h"
 #include "States/GoalKeeperState.h"
+#include "States/ChaseState.h"
+#include "States/PositionState.h"
 
 Character::Character(Game* game, const std::string &name, const std::string &texturePath, bool isPlayer, float size, float forwardSpeed, bool isGoalkeeper, float mass)
         :Actor(game)
@@ -30,6 +32,10 @@ Character::Character(Game* game, const std::string &name, const std::string &tex
         if (isGoalkeeper) {
             new GoalKeeperState(mFsmComponent, "goalkeeper");
             mFsmComponent->Start("goalkeeper");
+        } else {
+            new ChaseState(mFsmComponent, "chase");
+            new PositionState(mFsmComponent, "position");
+            mFsmComponent->Start("chase");
         }
     }
 }
